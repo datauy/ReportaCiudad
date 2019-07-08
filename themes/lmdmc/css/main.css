@@ -1,0 +1,715 @@
+/* ==========================================================================
+  General styles
+   ========================================================================== */
+
+body { background: #ccc; height: 100vh; }
+.row {  }
+* {outline: none}
+
+
+
+/* ==========================================================================
+   Containers Styles
+   ========================================================================== */
+
+.main_nav {
+
+	background-color: #ffffff;
+    box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.26);
+    position: relative;
+    z-index: 5;
+    padding: 0;
+    text-align: center;
+
+
+}
+.main_area { padding: 0; }
+
+.main_feed { background:#f7f7f7;}
+
+.column {
+	height: 100vh;
+	overflow-y: scroll;
+   }
+
+.map_container {  }
+
+.main_header {
+	height: 74px;
+	background-color: #ffffff;
+	box-shadow: 0 2px 11px 0 rgba(0, 0, 0, 0.26);
+
+ }
+.main_login {
+	height: 74px;
+	background-color: #ffffff;
+	box-shadow: 7px 0px 11px 0px rgba(0, 0, 0, 0.26);
+	border-left: solid 1px rgba(151, 151, 151, 0.35);
+}
+
+.popup_container { background: rgba(0,0,0,0.8); height: 100%; width: 100%; position: absolute;z-index: 10;left: 0;top:0; }
+
+/* ==========================================================================
+   Buttons Styles
+   ========================================================================== */
+
+.button {
+	padding:12px 30px;
+	border-radius: 100px;
+	border: solid 1px #f58634;
+	font-family: Montserrat;
+	font-size: 12px;
+	line-height: 1.57;
+	text-align: left;
+	color: #f58634;
+	text-transform: uppercase;
+	-webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+.button:hover { background: #f58634;color: #fff;text-decoration: none; }
+
+.button_secondary { border: solid 1px #4a4a4a; color: #4a4a4a }
+.button_secondary:hover {background: #4a4a4a;color: #fff;text-decoration: none;}
+
+/* ==========================================================================
+   Main Header Styles
+   ========================================================================== */
+
+.main_header .button { float: left; margin: 15px 0 0 15px; }
+
+/* ==========================================================================
+   Main Nav Styles
+   ========================================================================== */
+
+  nav a {
+	font-family: Montserrat;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 1.38;
+	text-align: left;
+	color: #4a4a4a;
+	display: inline-block;
+	width: 100%;
+	padding: 25px;
+	border-bottom: solid 1px rgba(151, 151, 151, 0.35);
+	position: relative;
+	transition: .1s transform linear;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+  }
+  nav a:hover, nav .active {
+  	background: #F2F2F2;
+  	text-decoration: none;
+  	font-weight: 500;
+  	color: #4a4a4a;
+  	text-indent: 10px;
+  }
+  nav a:hover:before {
+  	 border:5px solid;
+  }
+
+  nav a:before {
+  	content: '';
+    height: 100%;
+    position: absolute;
+    color: black;
+    top: 0;
+    border: 2px solid;
+    left: 0;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+   }
+
+    nav a:after {
+  	content: '';
+    position: absolute;
+    top: 30px;
+    right: 15px;
+    background: url(../img/arrow.svg);
+    height: 13px;
+    width: 8px;
+    transition: .1s transform linear;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+  }
+  nav a:hover:after {
+  	 right: 10px;
+  }
+
+  .submenu { width:250px; height: 100%; position: absolute;left:-10px;top:20px; z-index: 2;
+     transition: .3s transform linear;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    transform: translateX(-250px);
+
+
+  }
+  .submenu.show {transform: translateX(0px);}
+
+  .submenu .view-content {
+		background: red;
+    padding: 0;
+    border-radius: 10px;
+    margin: 0;
+    background-color: #631e8f
+
+    }
+
+   .submenu .view-content .views-row {
+ 		padding: 40px;
+	    border-bottom: 1px solid #000;
+	    list-style: none;
+	    cursor: pointer;
+      transition: .1s transform linear;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+   }
+   .submenu .view-content .views-row:last-child { border:none; }
+
+   .submenu .view-content .views-row:hover { background:#3F0572;border-radius: 10px }
+
+   .submenu .view-content .views-row a {
+  	font-family: Montserrat;
+	font-size: 14px;
+	font-weight: 300;
+	text-align: left;
+	color: #ffffff;
+  }
+
+  .main_nav .button { display: inline-block; margin:25px 0 0 0;border-color: #9b9b9b; color: #9b9b9b; }
+  .main_nav .button:hover { background: #9b9b9b; color: #fff; }
+
+  .main_nav h1 {margin: 70px 40px 0 0}
+
+  .main_nav h3 {
+  	font-family: Montserrat;
+	font-size: 14px;
+	line-height: 1.5;
+	text-align: left;
+	color: #4a4a4a;
+	padding-left: 30px;
+	margin: 50px 0 30px 0;
+  }
+
+  .main_nav .bottom_nav {
+
+  	 padding: 0;
+  	 margin: 0;
+  }
+
+  .main_nav .bottom_nav ul {
+  	padding:40px 0 20px 30px;
+  	margin: 0;
+  	text-align: left;
+
+  }
+   .main_nav .bottom_nav ul li {list-style-type: none;}
+
+   .main_nav .bottom_nav ul li a {
+   	font-family: Montserrat;
+	font-size: 13px;
+	font-weight: 300;
+	line-height: 2.64;
+	text-align: left;
+	color: #4a4a4a;
+	text-transform: uppercase;
+	text-decoration: underline;
+	transition: .1s transform linear;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+   }
+
+   .main_nav .bottom_nav ul li a:hover { padding-left: 5px;color: #000 }
+
+ /* ==========================================================================
+   Main Feed Styles
+  ========================================================================== */
+
+
+  .feed_container {
+  	padding: 0;
+   }
+  .reports_pormibarrio h3 {
+  	font-family: Montserrat;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.62;
+	text-align: left;
+	color: #4a4a4a;
+	border-bottom: solid 1px rgba(151, 151, 151, 0.35);
+	padding: 20px;
+  }
+  .reports_pormibarrio small {
+  	font-family: Montserrat;
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 1.62;
+	text-align: left;
+	color: #4a4a4a;
+	padding:5px 20px;
+	display: inline-block;
+}
+  .report { padding: 10px 15px; width: 100%;display: inline-block; margin-bottom: 10px;}
+  .report figure { height: 40px; width: 40px; border-radius: 100px;overflow: hidden;float: left; }
+  .report .txt {float:left;margin-left:10px;}
+
+  .report .txt h4 {
+  	font-family: Montserrat;
+	font-size: 12px;
+	text-align: left;
+	color: #1e7fcb;
+	margin: 0;
+  }
+
+  .report .txt p {
+  	font-family: Montserrat;
+	font-size: 12px;
+	font-weight: 300;
+	line-height: 1.07;
+	text-align: left;
+	color: #4a4a4a;
+	margin: 0;
+  }
+
+  .report .txt span {
+  	font-family: Montserrat;
+	font-size: 12px;
+	font-weight: 300;
+	font-style: italic;
+	line-height: 1.86;
+	text-align: left;
+	color: #4a4a4a;
+  }
+
+.resume_feed { min-height: 200px;  color: #ccc; padding: 20px 0; background: rgb(232, 230, 230);}
+
+.resume_feed ul li { width: 50%; color: #ccc; }
+.resume_feed ul li.active { border-bottom: solid 2px rgb(245, 134, 52) }
+.resume_feed ul li.active a { font-weight: 500; }
+.resume_feed ul li a {
+
+	font-family: Montserrat;
+	font-size: 13px;
+	font-weight: 300;
+	text-align: left;
+	line-height: 17px;
+	color: #4a4a4a;
+	border-radius: 0;
+	border:none !important;
+	background: none !important;
+}
+
+.resume_feed .tab-content { color: #000; }
+.resume_feed .tab-content h3 {
+	font-family: Montserrat;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 1.62;
+	text-align: left;
+	margin: 0;
+	display: inline-block;
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+	padding:10px 20px;
+}
+.resume_feed .tab-content h3 span {  font-weight:300;margin-left: 20px; text-align: right;float: right; letter-spacing: 2px; }
+
+ /* ==========================================================================
+   Main Login
+  ========================================================================== */
+
+  .main_login .user {
+
+  	margin: 12px 0 0 15px;
+    float: right;
+    transition: .1s transform linear;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+    cursor: pointer;
+
+   }
+
+  .main_login .user p {
+  	font-family: Montserrat;
+    font-size: 12px;
+    line-height: 4.5;
+    text-align: left;
+    color: #4a4a4a;
+    text-transform: uppercase;
+    float: left;
+    margin-right: 10px;
+   }
+   .main_login .user figure { height: 50px; width: 50px; border-radius: 100px;overflow: hidden;float: left; }
+   .main_login .user:hover {transform: translateY(-2px);}
+
+
+ /* ==========================================================================
+   Map Styles
+  ========================================================================== */
+
+
+.map_tooltip {
+  padding: 20px;
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 3px;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 22px 0 rgba(0, 0, 0, 0.13);
+  transition: .1s transform linear;
+  -webkit-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+
+}
+
+.map_tooltip:hover { padding: 22px; }
+
+.map_tooltip_arrow {
+    width: 50px;
+    height: 25px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+    .map_tooltip_arrow:after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: white;
+      transform: translateX(-50%) translateY(-50%) rotate(45deg);
+      top: 0px;
+      left: 50%;
+
+    }
+
+
+
+.map_tooltip i {
+
+	width: 50px;
+	height: 50px;
+	border-radius: 100px;
+	background:rgba(195, 176, 207,0.4);
+	float: left;
+	margin-right: 15px;
+ }
+
+ .map_tooltip i img { padding:12px 15px; }
+
+ .map_tooltip h4 {
+ 	font-family: Montserrat;
+	font-size: 10px;
+	text-align: left;
+	color: #4a4a4a;
+	text-transform: uppercase;
+	margin: 10px 0 0 0;
+ }
+  .map_tooltip span {
+  	font-family: Montserrat;
+	font-size: 14px;
+	font-weight: 300;
+	text-align: left;
+	color: #4a4a4a;
+	line-height: 20px;
+  }
+
+.search_input {
+	width: 495px;
+	height: 50px;
+	border-radius: 5px;
+	background-color: #ffffff;
+	position: absolute;
+	top: 40px;
+	left: 40px;
+}
+.search_input a {
+	background: url(../img/lupa.svg) no-repeat;
+    height: 16px;
+    width: 16px;
+    display: block;
+    font-size: 0;
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    cursor: pointer;
+  	transition: .1s transform linear;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+.search_input a:hover {
+
+    top:15px;
+
+}
+.search_input input {
+	font-family: Montserrat;
+	font-size: 14px;
+	font-weight: 300;
+	text-align: left;
+	color: #9b9b9b;
+	width: 495px;
+	height: 50px;
+	border: none;
+	padding: 20px;
+	border-radius: 2px;
+}
+
+.category_toast {
+ 	height: 103px;
+	background-color: #fff;
+	width: 100%;
+	border-top:3px solid #631e8f;
+	position: relative;
+	z-index: 3;
+	padding: 25px 25px 25px 40px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+
+}
+.category_toast i {
+
+	width: 50px;
+	height: 50px;
+	border-radius: 100px;
+	background:rgba(195, 176, 207,0.4);
+	float: left;
+	margin-right: 15px;
+
+ }
+
+ .category_toast i img { padding:12px 15px; }
+
+ .category_toast h4 {
+ 	font-family: Montserrat;
+	font-size: 10px;
+	text-align: left;
+	color: #4a4a4a;
+	text-transform: uppercase;
+	margin: 10px 0 0 0;
+ }
+  .category_toast span {
+  	font-family: Montserrat;
+	font-size: 14px;
+	font-weight: 300;
+	text-align: left;
+	color: #4a4a4a;
+	line-height: 20px;
+  }
+.category_toast .objetives_button {
+	font-family: Montserrat;
+	font-size: 14px;
+	text-align: left;
+	color: #4a4a4a;
+	float: right;
+	line-height: 7px;
+	padding: 20px;
+	transition: .1s transform linear;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+
+.category_toast .objetives_button:after {
+
+	content:'';
+    background: url(../img/arrow.svg) no-repeat;
+    height: 15px;
+    width: 15px;
+    float: right;
+    transform: rotate(-90deg);
+    margin-left: 10px;
+    margin-top: -8px;
+
+}
+.category_toast .objetives_button:hover {transform:translateY(-2px);text-decoration: none; }
+.category_toast .objetives_button.show:after { transform: rotate(90deg);margin-top:0;}
+
+
+.objetivos_table, .main_content_container{
+
+    height: 100%;
+    background: #fff;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    transition: .1s transform linear;
+    -webkit-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+    /*transform: translateY(500px);*/
+    overflow-y: scroll;
+		padding-left: 40px;
+
+ }
+
+ .objetivos_table.show, .main_content_container.show{ transform: translateY(-94px); }
+
+ .objetivos_table h3 {
+
+    font-family: Montserrat;
+    font-size: 18px;
+    text-align: left;
+    color: rgb(74, 74, 74);
+    padding:0px 50px;
+    margin: 20px 0 0 0;
+ }
+ .objetivos_table a {
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 300;
+  text-align: left;
+  color: rgb(74, 144, 226);
+  padding:0px 50px;
+
+  }
+
+ .objetivos_fila { background-color: rgba(216, 216, 216,0.3); padding:10px 50px; margin-top: 20px; }
+
+.objetivos_fila h5 { font-weight: bold; }
+.objetivos_fila p {
+
+  font-family: Montserrat;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.43;
+  text-align: left;
+  color: rgb(155, 155, 155);
+  }
+
+  .row_table {padding:10px 50px;}
+
+  .row_table tr th,  .row_table tr td {
+    font-size: 12px;
+    line-height: 1.43;
+    text-align: left;
+    color: rgb(74, 74, 74);
+    }
+/* ==========================================================================
+   Main Login Styles
+   ========================================================================== */
+
+.login_box {
+
+	border-radius: 5px;
+	background-color: #ffffff;
+	box-shadow: 2px 2px 22px 0 rgba(0, 0, 0, 0.13);
+	text-align: center;
+	padding: 35px;
+	margin:30px auto;
+	float: none;
+ }
+
+ .login_box .close { background: url(../img/close.svg); font-size: 0;height: 25px;width: 25px; }
+ .login_box h3 {
+
+ 	font-family: Montserrat;
+	font-size: 19px;
+	font-weight: 300;
+	color: #4a4a4a;
+  margin-bottom: 40px;
+ }
+
+  .login_box form { margin-top: 20px; }
+
+  .login_box .input { width: 100%; display: inline-block; border-bottom: solid 1px rgb(151, 151, 151); text-align: left; margin: 10px 0; }
+  .login_box .input input { border:none;padding: 10px;
+      font-family: Montserrat;
+      font-size: 14px;
+      font-weight: 300;
+      text-align: left;
+      color: rgb(74, 74, 74);
+   }
+
+  .login_box .input label {
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: left;
+  color: rgb(74, 74, 74);
+  }
+
+ .login_box .social_button { background:#000; display: inline-block; width: 100%; padding: 15px;margin: 5px 0 5px 0 }
+
+ .login_box .button {
+
+ 	  width: 100%;
+    display: inline-block;
+    text-align: center;
+    margin-top: 20px;
+
+  }
+
+ .login_box span a {
+ 	font-family: Montserrat;
+	font-size: 12px;
+	font-weight: 300;
+	text-align: left;
+	color: #f58634;
+	display: inline-block;
+	margin-top: 20px;
+ }
+
+  /* ==========================================================================
+   Intro Styles
+  ========================================================================== */
+
+  .home { background: url(../img/bg.jpg) no-repeat;background-size: cover; }
+
+  .intro_box {
+  		border-radius: 5px;
+		background-color: rgb(255, 255, 255);
+		box-shadow: 2px 2px 22px 0 rgba(0, 0, 0, 0.13);
+		padding:80px 80px 0 80px;
+		margin:50px auto;
+		float: none;
+		border-bottom: 6px solid rgb(0, 158, 224);
+		text-align: center;
+    max-width: 750px;
+   }
+
+   .intro_box h1 {
+  font-family: Montserrat;
+	font-size: 16px;
+	font-weight: bold;
+  margin: 30px 0 10px 0;
+	line-height: 1.33;
+	color: rgb(74, 74, 74);
+
+   }
+
+   .intro_box p {
+   	font-size: 14px;
+	font-weight: 300;
+	line-height: 1.5;
+	text-align: center;
+	color: rgb(74, 74, 74);
+	margin-bottom:30px;
+   }
+
+   .intro_box small { display: inline-block; margin: 30px 0;
+
+   	font-family: Montserrat;
+	font-size: 10px;
+	font-weight: 300;
+	line-height: 1.58;
+	text-align: center;
+	color: rgb(74, 74, 74);
+
+   }
+
+   .intro_box small a { color: #f58634 }
+
+   .intro_box .button {width: 215px;display: inline-block; text-align: center; margin-right: 10px; margin-top: 5px;}
+
+/* ==========================================================================
+   Sections Styles
+   ========================================================================== */
+
+.democracia_participacion:before { color: #1f7fcc;}
+.desarollo_urbano:before { color: #6ea52e;}
+.inclusion_equidad:before { color: #631d8f;}

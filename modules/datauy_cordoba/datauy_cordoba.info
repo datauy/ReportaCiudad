@@ -1,0 +1,6 @@
+name = DataUY Custom Metas de mi ciudad module
+description = Customizaciones desarrolladas por DATA para el sitio Metas de Mi Ciudad
+core = 7.x
+package = "DATA modules"
+
+scripts[] = datauy_cordoba.js

@@ -1,0 +1,1647 @@
+<?php
+/**************************************************************
+  NOTAS :
+  Mantener orden en render de mapa y en asignación de categorías
+   a los nodos.
+
+**************************************************************/
+function datauy_cordoba_menu(){
+  $items['cordoba/test'] = array(
+    'title' => t('Test Page'),
+    'description' => t('Test'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_test',
+    'type' => MENU_CALLBACK,
+  );
+  $items['node-view/%'] = array(
+    'title' => t('Test Page'),
+    'description' => t('Test'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_node_rendered',
+    'page arguments' => array(1),
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'datauy_cordoba_ajax_callback',
+  );
+  /*$items['cordoba-login'] = array(
+    'title' => t('Main Login'),
+    'description' => t('Loggin in'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_logginin',
+    'type' => MENU_CALLBACK,
+  );
+  $items['cordoba-logout'] = array(
+    'title' => t('Main Logout'),
+    'description' => t('Loggin out'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_logout',
+    'type' => MENU_CALLBACK,
+  );
+  $items['reporta/ciudad'] = array(
+    'title' => t('Reportes'),
+    'description' => t('Reportes en plataforma de reporteria'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_reportar',
+    'type' => MENU_CALLBACK,
+  );*/
+  $items['admin/add-objective'] = array(
+    'title' => t('Add municipal objective by external ID'),
+    'description' => t('Add municipal objective by external ID'),
+    'access callback' => TRUE,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('datauy_cordoba_add_objective'),
+    'type' => MENU_CALLBACK,
+  );
+  /*$items['import/centros_salud/csv'] = array(
+    'title' => t('Get health centers from CSV and import as nodes'),
+    'description' => t('Import, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_import_health_centers_from_csv',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );
+  $items['import/escuelas/csv'] = array(
+    'title' => t('Get schools from CSV and import as nodes'),
+    'description' => t('Import, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_import_schools_from_csv',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );
+  $items['import/orgs/csv'] = array(
+    'title' => t('Get orgs from CSV and import as nodes'),
+    'description' => t('Import, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_import_orgs',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );
+  $items['import/reports/csv'] = array(
+    'title' => t('Get REPORTS from CSV and import as nodes with comments'),
+    'description' => t('Import, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_import_reports',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );*/
+  $items['export/centros_salud/json'] = array(
+    'title' => t('Export centros de salud'),
+    'description' => t('Export, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_export_health_centers_json',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );
+  $items['export/escuelas/json'] = array(
+    'title' => t('Export centros de salud'),
+    'description' => t('Export, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_export_schools_json',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );
+  $items['export/cpcs/json'] = array(
+    'title' => t('Export CPCs json'),
+    'description' => t('Export, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_export_cpcs_json',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );
+  $items['export/all/json'] = array(
+    'title' => t('Export CPCs json'),
+    'description' => t('Export, multiform'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_export_all_json',
+    //'page arguments' => array(2, 3),
+    'type' => MENU_CALLBACK,
+  );
+  $items['acceso-denegado'] = array(
+    'title' => t('Acceso denegado'),
+    'description' => t('No tiene permisos para visitar esta página'),
+    'access callback' => TRUE,
+    'page callback' => 'datauy_cordoba_access_denied',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function datauy_cordoba_field_formatter_info() {
+  return array(
+    'datauy_cordoba_tid' => array(
+      'label' => t('tid'),
+      'field types' => array('taxonomy_term_reference'),
+    ),
+  );
+}
+
+function datauy_cordoba_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  switch ($display['type']) {
+    case 'datauy_cordoba_tid':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#markup' => $item['tid'],
+        );
+      }
+      break;
+  }
+  return $element;
+}
+
+function datauy_cordoba_access_denied(){
+  return 'No tiene permisos para visitar esta página, por favor si no está logueado <a href="/user/login?destination="'.$_GET['q'].'">ingrese ahora</a>. Si ya está logueado pero no puede acceder a esta página es porque no tiene permisos. <a href="/contact">Contacte al administrador del sitio</a>.<br>Disculpas por los inconvenientes.';
+}
+
+/**
+ * Implements hook_permission().
+*/
+function datauy_cordoba_permission(){
+	return array('datauy custom configure' => array('title' => 'Administer custom site'));
+}
+
+/**
+ * Implements hook_cron().
+*/
+function datauy_cordoba_cron(){
+  datauy_cordoba_pm_get_metas();
+  watchdog('datauy_cordoba', 'Cron ejecutado para metas:', array(), WATCHDOG_ALERT);
+	datauy_cordoba_pm_get_indicadores();
+  watchdog('datauy_cordoba', 'Cron ejecutado para indicadores', array(), WATCHDOG_ALERT);
+}
+
+function datauy_cordoba_form_reportes_node_form_alter(&$form, &$form_state) {
+  if ( empty($form['field_category']['und']['#default_value']) ) {
+    //Get cats level 2
+    $cat_tree = taxonomy_get_tree(2, 0, 2);
+    $options = array();
+    $parents = array();
+    $class = '';
+    foreach ($cat_tree as $term) {
+      //Get rid of first level
+      if ( $term->parents['0'] ){
+        $options += _datauy_cordoba_cat_form_options($term->tid, $class);
+        $option_nids = array_keys($options);
+        //Index nids with parent
+        $parents += array_combine( $option_nids, array_fill(0, sizeof($option_nids), $term->tid) );
+      }
+      else {
+        module_load_include('inc', 'pathauto');
+        $class = pathauto_cleanstring($term->name);
+      }
+    }
+    $form['parents'] = array('#type' => 'hidden', '#value' => $parents);
+    $selected = isset($form_state['values']['cat']) ? $form_state['values']['cat'] : 0;
+    $form['cat'] = array(
+      '#type' => 'select',
+      '#title' => t('Category'),
+      '#required' => TRUE,
+      '#weight' => -1,
+      '#options' => $options,
+      '#ajax' => array(
+        'callback' => 'ajax_subcat_dropdown_callback',
+        'wrapper' => 'view-subcat-dropdown',
+      ),
+    );
+    if ( is_numeric($selected) ){
+      $form['subcat'] = array(
+        '#type' => 'select',
+        '#title' => 'Sub-categoría',
+        '#weight' => 0,
+        //'#required' => TRUE,
+        '#prefix' => '<div id="view-subcat-dropdown">',
+        '#suffix' => '</div>',
+        '#options' => _datauy_cordoba_cat_form_options($selected, 0),
+        '#default_value' => isset($form_state['values']['subcat']) ? $form_state['values']['subcat'] : '',
+      );
+    }
+    else {
+      $form['subcat'] = array(
+        '#type' => 'markup',
+        '#markup' => '<a class="btn btn-danger" href="'.$selected.'">Crear reporte</a>',
+        '#weight' => 0,
+        '#prefix' => '<div id="view-subcat-dropdown" style="height:1000px">',
+        '#suffix' => '</div>',
+        );
+    }
+    $form['#validate'][] = 'datauy_cordoba_report_validate';
+    $form['#submit'][] = 'datauy_cordoba_report_submit';
+  }
+}
+function datauy_cordoba_report_validate($form, &$form_state){
+  if (!$form_state['values']['subcat'])
+    form_set_error('subcat', t('Por favor elija una Sub-categoría'));
+}
+function datauy_cordoba_report_submit($form, &$form_state){
+  //print "SUBMIT REPORT<br><pre>";
+  //print_r($form_state['values']);
+  //exit();
+  $subcat = $form_state['values']['subcat'];
+  $terms_arr = datauy_cordoba_get_categories_indexed();
+  $cat_tree = datauy_cordoba_set_tree($subcat, 3, $terms_arr);
+  //Limpiamos cats previas
+  ksort($cat_tree);
+  $form_state['values']['field_category']['und'] = array();
+  foreach ($cat_tree as $key => $value) {
+    $form_state['values']['field_category']['und'][$key]['tid'] = $value;
+  }
+}
+// Ajax Call
+function ajax_subcat_dropdown_callback($form, $form_state) {
+  return $form['subcat'];
+}
+
+function _datauy_cordoba_cat_form_options($tid, $class){
+  $options = array();
+  if ($tid) {
+    $terms = taxonomy_get_tree(2, $tid, 1);
+    foreach ($terms as $term) {
+      if ( $class ) {
+        if ( !empty(taxonomy_get_children($term->tid)) ){
+          $options[$term->tid] = $term->name;
+        }
+        else {
+          $tterm = taxonomy_term_load($term->tid);
+          $url = 0;
+          if ( isset($tterm->field_x_data['und']) && !empty($tterm->field_x_data['und']['0']['value']) ){
+            $url = $tterm->field_x_data['und']['0']['value'];
+            $options[$url] = $term->name;
+          }
+        }
+      }
+      else {
+        $options[$term->tid] = $term->name;
+      }
+    }
+  }
+  return $options;
+}
+
+function datauy_cordoba_node_rendered($nid) {
+  $node = node_load($nid);
+  switch ( $node->type ){
+    case 'relevamiento_centros_de_salud':
+    case 'relevamiento_jpv':
+    case 'relevamiento_escuela_municipal':
+    case 'relevamiento_pp':
+      $geo = array("-31.421993", "-64.175616");
+    break;
+    default:
+      $geo = array($node->field_location['und']['0']['lat'], $node->field_location['und']['0']['lon']);
+  }
+  return array($node, $geo);//print drupal_render($view);
+}
+
+function datauy_cordoba_ajax_callback($callback) {
+  global $user;
+
+  $node = $callback['0'];
+  $view = node_view($node, 'full');
+  $content = drupal_render($view);
+
+  // Add CSS and JS files, add some markup
+  $html = '<button id="overlay-close">X</button>'.$content . '<script>
+  jQuery("#overlay-close").click(function(){
+    jQuery(".overlay").hide();
+  });
+  jQuery(".field-slideshow-thumbnail").click(function(){
+    var classes = this.className.split(" ");
+    jQuery(classes).each(function() {
+      var class_arr = this.split("-");
+      if (class_arr.length == 4 && class_arr[0] == "field") {
+        jQuery(".field-slideshow-slide").hide();
+        jQuery(".field-slideshow-slide-"+class_arr[3]).show();
+      }
+    });
+  });
+  var lat = '.$callback['1']['0'].';
+  var lon = '.$callback['1']['1'].';
+  jQuery(".map-section").empty();
+  //jQuery(".map-section").height(200);
+  //jQuery(".map-section").width("100%");
+  //jQuery(".map-section").append("<div id=\'pin_description\'></div>");
+  jQuery(".map-section").append("<div id=\'map_report_over\' style=\'height: 200px;\' class=\'field-type-geofield field-name-field-location field-widget-leaflet-widget-widget form-wrapper form-group\'></div>");
+  var myrepomap = L.map("map_report_over").setView([lat, lon], 13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "Map data &copy; <a href=\'http://openstreetmap.org\'>OpenStreetMap</a>",
+      maxZoom: 18,
+      id: "map_report_over",
+  }).addTo(myrepomap);
+  repoPin = L.marker([lat, lon], {});
+  myrepomap.addLayer(repoPin);
+  setTimeout(function(){myrepomap.invalidateSize(); myrepomap.setView([lat, lon], 13);},1000);
+  </script>';
+  if ($cids = comment_get_thread($node, COMMENT_MODE_THREADED, 10)) {
+    $comments = comment_load_multiple($cids);
+    $html .= '<div class="node-comments">'.drupal_render(comment_view_multiple($comments, $node)).'</div>';
+  }
+  if ( $user->uid ){
+    $html .= '<div class="node-comments">'.drupal_render(drupal_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid))) .'</div>';
+    $html .= "<script>
+      var recapt = jQuery('.g-recaptcha').get(0);
+      console.log(recapt);
+      if ( typeof recapt !== 'undefined' ){
+        grecaptcha.render( recapt );
+      }
+      </script>";
+  }
+  print $html;
+
+  // Perform end-of-request tasks.
+  drupal_page_footer();
+}
+
+/*function datauy_cordoba_reportar() {
+  global $user;
+
+  if ( $user->uid != 0 ) {
+    $base_reports = variable_get('reportes_url', '');
+    header("Location: $base_reports/around?latitude=-31.421993;longitude=-64.175616&zoom=2&list=0");
+  }
+  else {
+    drupal_set_message('Debes estar registrado para poder reportar');
+    drupal_goto( 'user/login', array('query' => array('destination' => 'reporta/ciudad')) );
+  }
+}*/
+
+function datauy_cordoba_export_health_centers_json(){
+  $type = "centro_de_salud";
+  $nodes = node_load_multiple(array(), array('type' => $type));
+  $html =  '{"features": [ ';
+  foreach($nodes as $node){
+    $html .= '{"geometry":
+        {"coordinates":	["'.$node->field_location['und'][0]['lon'].'","'.$node->field_location['und'][0]['lat'].'"],
+         "type":"Point"
+        },
+      "properties":
+        {"Nombre":"'.$node->title.'","Dirección":"'.$node->field_direccion['und']['0']['value'].'","Teléfono":"'.$node->field_tel_fono['und']['0']['value'].'", "Horario":"'.$node->field_horario['und']['0']['value'].'","Id":"'.$node->nid.'"},
+      "type":"Feature"},';
+  }
+  $html .= '],"type":"FeatureCollection" }';
+  $html = str_replace(",]","]",$html);
+  echo $html;
+  exit();
+}
+
+function datauy_cordoba_export_cpcs_json(){
+  $type = "cpcs";
+  $nodes = node_load_multiple(array(), array('type' => $type));
+  $html =  '{"features": [ ';
+  foreach($nodes as $node){
+    $html .= '{"geometry":
+        {"coordinates":	["'.$node->field_location['und'][0]['lon'].'","'.$node->field_location['und'][0]['lat'].'"],
+         "type":"Point"
+        },
+      "properties":
+        {"Nombre":"'.$node->title.'","Id":"'.$node->nid.'"},
+      "type":"Feature"},';
+  }
+  $html .= '],"type":"FeatureCollection" }';
+  $html = str_replace(",]","]",$html);
+  echo $html;
+  exit();
+}
+
+function datauy_cordoba_export_all_json(){
+  //$nodes = node_load_multiple(array(), array());
+  $nodes = entity_load('node');
+  $html =  '{"features": [ ';
+  foreach($nodes as $node){
+	if(isset($node->field_location['und'][0])){
+		$html .= '{"geometry":
+        {"coordinates":	["'.$node->field_location['und'][0]['lon'].'","'.$node->field_location['und'][0]['lat'].'"],
+         "type":"Point"
+        },
+      "properties":
+        {"Nombre":"'.$node->title.'","Id":"'.$node->nid.'","Type":"'.$node->type.'"},
+      "type":"Feature"},';
+	}
+  }
+  $html .= '],"type":"FeatureCollection" }';
+  $html = str_replace(",]","]",$html);
+  echo $html;
+  exit();
+}
+
+function datauy_cordoba_export_schools_json(){
+  $type = "escuela_municipal";
+  $nodes = node_load_multiple(array(), array('type' => $type));
+  $html =  '{"features": [ ';
+  foreach($nodes as $node){
+    $html .= '{"geometry":
+        {"coordinates":	["'.$node->field_location['und'][0]['lon'].'","'.$node->field_location['und'][0]['lat'].'"],
+         "type":"Point"
+        },
+      "properties":
+        {"Nombre":"'.$node->title.'", "Numero":"'.$node->field_number['und']['0']['value'].'","Id":"'.$node->nid.'"},
+      "type":"Feature"},';
+  }
+  $html .= '],"type":"FeatureCollection" }';
+  $html = str_replace(",]","]",$html);
+  echo $html;
+  exit();
+}
+
+function datauy_cordoba_import_schools_from_csv(){
+  $external_url = "https://reportaciudad.org/escuelas.csv";
+  $data = file_get_contents($external_url);
+  $rows = str_getcsv($data, "\n"); //parse the rows
+  $html = "Importando escuelas...";
+  foreach($rows as $key => $row){
+    $rowParsed = str_getcsv($row, ";"); //parse the items in rows
+    $node = datauy_cordoba_create_school_node($rowParsed);
+    //exit(); //Only take first row
+  }
+  return 'success';
+}
+
+function datauy_cordoba_create_school_node($rowParsed){
+  $node = new stdClass();
+  $number = $rowParsed[0];
+  $name = $rowParsed[1];
+  $direccion =  $rowParsed[2];
+  $coords = $rowParsed[3];
+  $coordsArray = explode(",",$coords);
+  $lon = $coordsArray[1];
+  $lat = $coordsArray[0];
+  $node->title = $name;
+  $node->type = "escuela_municipal";
+  node_object_prepare($node);
+  //$node->field_direccion['und'][0]['value'] = $direccion;
+  $node->field_number['und'][0]['value'] = $number;
+  $node->field_location['und'][0] = array(
+    'input_format' => GEOFIELD_INPUT_LAT_LON,
+    'geom' => array('lat' => $lat, 'lon' => $lon),
+  );
+  $node->status = 1;
+  node_save($node); //Comentado para evitar duplicados
+  return $node;
+}
+
+function datauy_cordoba_import_orgs(){
+  node_delete_multiple( array_keys(node_load_multiple(array(), array('type' => 'organizacion_sociedad_civil'))) );
+  $nodes = node_load_multiple(array(), array('type' => 'cpcs'));
+  $cpcs_array = array();
+  foreach($nodes as $node){
+    $cpc = str_replace('CPC ', '', $node->title);
+    $cpcs_array[$cpc]['nid'] = $node->nid;
+    $cpcs_array[$cpc]['coords'] = array($node->field_location['und']['0']['lat'],$node->field_location['und']['0']['lon']);
+  }
+  print '<pre>';
+  $external_url = "https://metasdmc.development.datauy.org/orgs2.csv";
+  try {
+    $data = file_get_contents($external_url);
+  }
+  catch(Exception $e) {
+    echo $e->getMessage();
+  }
+  $rows = str_getcsv($data, "\n"); //parse the rows
+  print "Importando Organizaciones...";
+  foreach($rows as $row){
+    $rowParsed = str_getcsv($row, ","); //parse the items in rows
+    $node = datauy_cordoba_create_org_node($rowParsed, $cpcs_array);
+  }
+  return 'success';
+}
+
+
+function datauy_cordoba_create_org_node($rowParsed, $cpcs){
+  $node = new stdClass();
+  $node->title = $rowParsed[0];
+  $node->type = "organizacion_sociedad_civil";
+  node_object_prepare($node);
+  $node->field_direccion['und'][0]['value'] = $rowParsed[1];
+  $coords = $rowParsed[2];
+  //Fucking spred skip 5 tragets
+  $node->field_barrio['und'][0]['value'] = $rowParsed[9];
+  $cpc = $rowParsed[10];
+  //$node->field_referente['und'][0]['value'] = $rowParsed[5];
+  $node->field_email['und'][0]['value'] = $rowParsed[11];
+  $node->field_tel_fono['und'][0]['value'] = $rowParsed[12];
+  if ( isset($rowParsed[13]) && $rowParsed[13] )
+    $node->field_sitio_web['und'][0]['value'] = $rowParsed[13];
+  if ( isset($rowParsed[14]) && $rowParsed[14] )
+    $node->field_facebook['und'][0]['value'] = $rowParsed[14];
+  //$node->field_twitter['und'][0]['value'] = $rowParsed[10];
+  //Location
+  $coordsArray = explode(",",$coords);
+  if ( sizeof($coordsArray) < 2 ) {
+    if ( $cpc && isset($cpcs[$cpc]) ){
+      $coordsArray = $cpcs[$cpc]['coords'];
+    }
+    else
+      $coordsArray = array("-31.421993", "-64.175616");
+  }
+  $node->field_location['und'][0] = array(
+    'input_format' => GEOFIELD_INPUT_LAT_LON,
+    'geom' => array('lat' => $coordsArray[0], 'lon' => $coordsArray[1]),
+  );
+  //CPCs
+  if ( $cpc && isset($cpcs[$cpc]) ){
+    $node->field_cpc_de_pertenencia['und']['0']['target_id'] = $cpcs[$cpc]['nid'];
+  }
+  //Area of work
+  if ( isset($rowParsed[15]) && $rowParsed[15] ){
+    $node->field_areas_de_trabajo['und'][0]['value'] = $rowParsed[15];
+  }
+  if ( isset($rowParsed[16]) && $rowParsed[16] ){
+    $node->field_areas_de_trabajo['und'][1]['value'] = $rowParsed[16];
+  }
+  $node->status = 1;
+  node_save($node); //Comentado para evitar duplicados
+  print ' NODO SALVADO: '.$node->nid.'<br>';
+}
+
+
+function datauy_cordoba_import_reports(){
+  //node_delete_multiple( array_keys(node_load_multiple(array(), array('type' => 'reports'))) );
+  print '<pre>';
+  $external_url = "http://reportaciudad.org/reportes.csv";
+  $external_c_url = "http://reportaciudad.org/comments.csv";
+  try {
+    $data = file_get_contents($external_url);
+    $data_c = file_get_contents($external_c_url);
+  }
+  catch(Exception $e) {
+    echo $e->getMessage();
+  }
+  $rows = str_getcsv($data, "\n"); //parse the rows
+  array_shift($rows);
+  $comment_rows = str_getcsv($data_c, "\n");
+  array_shift($comment_rows);
+  $comments = array();
+  foreach ($comment_rows as $comment) {
+    $comment = str_getcsv($comment, ",");
+    $problem_id = array_shift($comment);
+    $comments[$problem_id][] = $comment;
+  }
+  print "Importando Reportes...";
+  foreach($rows as $row){
+    $rowParsed = str_getcsv($row, ","); //parse the items in rows
+    $user = user_load_by_mail($rowParsed[2]);
+    if ( $user ) {
+      //load category
+      $term = taxonomy_get_term_by_name($rowParsed[3], 'categories');
+      if ( !empty($term) ){
+        print "\nBuscando parents".key($term)."\n";
+        $fparents = taxonomy_get_parents(key($term));
+        $sparents = taxonomy_get_parents(key($fparents));
+        $node_created = datauy_cordoba_create_report_node($rowParsed, $user->uid, array(key($term), key($fparents), key($sparents)) );
+        if ($node_created){
+          //Check for comments
+          $report_id = $rowParsed[0];
+          if ( isset($comments[$report_id]) ) {
+            foreach ($comments[$report_id] as $report_comment) {
+              $user = user_load_by_mail($report_comment[4]);
+              if ($user) {
+                datauy_cordoba_create_report_comment($report_comment, $user, $node_created);
+              }
+              else {
+                print "User not found for comment: ".$report_comment[0];
+              }
+            }
+          }
+        }
+      }
+      else {
+        print 'Categoría no encontrada para '.$rowParsed[0];
+      }
+    }
+    else {
+      print 'Usuario no existe para '.$rowParsed[0];
+    }
+  }
+  return 'success';
+}
+
+function datauy_cordoba_create_report_comment($new_comment, $user, $nid) {
+  $comment = new stdClass();
+  $comment->nid = $nid;
+  $comment->uid = $user->uid;
+  $comment->mail = $user->mail;
+  $comment->created = date('U', strtotime($new_comment[1]));
+  $comment->status = COMMENT_PUBLISHED;
+  $comment->language = LANGUAGE_NONE;
+  $comment->comment_body[$comment->language][0]['value'] = $new_comment[2];
+  $comment->comment_body[$comment->language][0]['format'] = 'filtered_html';
+  if ( !empty($new_comment[3]) ){
+    $file_temp = file_get_contents('https://reportes.reportaciudad.org/photo/c/'.$new_comment[0].'.full.jpeg');
+    if ( $file_temp ){
+      $file_temp = file_save_data($file_temp, 'public://'.$new_comment[0].'-comment-full.jpeg', FILE_EXISTS_RENAME);
+      print "FOTO: ".$file_temp->filename;
+      $comment->field_fotos = array(
+        'und' => array(
+          0 => array(
+            'fid' => $file_temp->fid,
+            'filename' => $file_temp->filename,
+            'filemime' => $file_temp->filemime,
+            'uid' => 1,
+            'uri' => $file_temp->uri,
+            'status' => 1,
+            'display' => 1
+          )
+        )
+      );
+    }
+  }
+  try {
+    comment_save($comment);
+  }
+  catch(Exception $e) {
+    echo $e->getMessage();
+    return 0;
+  }
+  print "COMENTARIO CREADO: ".$comment->cid;
+}
+
+function datauy_cordoba_create_report_node($rowParsed, $uid, $terms){
+  $node = new stdClass();
+  $node->title = $rowParsed[1];
+  $node->type = "reportes";
+  node_object_prepare($node);
+  $node->status = 1;
+  $node->uid = $uid;
+  $node->created = date('U', strtotime($rowParsed[4]));
+  $node->body['und']['0']['value'] = $rowParsed[5];
+  $node->field_category['und'][]['tid'] = $terms[2];
+  $node->field_category['und'][]['tid'] = $terms[1];
+  $node->field_category['und'][]['tid'] = $terms[0];
+  $node->field_location['und'][0] = array(
+    'input_format' => GEOFIELD_INPUT_LAT_LON,
+    'geom' => array('lat' => $rowParsed[6], 'lon' => $rowParsed[7]),
+  );
+  $node->field_anonimo['und']['0']['value'] = $rowParsed[8] == 't' ? 1 : 0;
+  if ( !empty($rowParsed[9]) ){
+    $file_temp = file_get_contents('https://reportes.reportaciudad.org/photo/'.$rowParsed[0].'.full.jpeg');
+    if ( $file_temp ){
+      $file_temp = file_save_data($file_temp, 'public://'.$rowParsed[0].'-full.jpeg', FILE_EXISTS_RENAME);
+      $node->field_fotos = array(
+        'und' => array(
+          0 => array(
+            'fid' => $file_temp->fid,
+            'filename' => $file_temp->filename,
+            'filemime' => $file_temp->filemime,
+            'uid' => 1,
+            'uri' => $file_temp->uri,
+            'status' => 1,
+            'display' => 1
+          )
+        )
+      );
+    }
+  }
+  try {
+    node_save($node); //Comentado para evitar duplicados
+    return $node->nid;
+  }
+  catch(Exception $e) {
+    echo $e->getMessage();
+    return 0;
+  }
+}
+
+
+
+function datauy_cordoba_import_health_centers_from_csv(){
+  $external_url = "https://reportaciudad.org/centrosDeSalud.csv";
+  $data = file_get_contents($external_url);
+  $rows = str_getcsv($data, "\n"); //parse the rows
+  $html = "Importando centros de salud...";
+  foreach($rows as $key => $row){
+    $rowParsed = str_getcsv($row, ","); //parse the items in rows
+
+    $node = datauy_cordoba_create_health_center_node($rowParsed);
+  }
+  return 'success';
+}
+
+
+
+function datauy_cordoba_create_health_center_node($rowParsed){
+  $node = new stdClass();
+  $name = $rowParsed[0];
+  $desc = $rowParsed[1];
+  $descArray = explode("<br>",$desc);
+  $direccion = "";
+  if($descArray[0]){
+    $direccion = $descArray[0];
+  }
+  $horario = "";
+  if($descArray[1]){
+    $horario = $descArray[1];
+    $horario = str_replace("Atención","",$horario);
+    $horario = trim($horario);
+  }
+  $telefono = "";
+  if($descArray[2]){
+    $telefono = $descArray[2];
+    $telefono = str_replace("TE:","",$telefono);
+    $telefono = trim($telefono);
+  }
+  $coords = $rowParsed[2];
+  $coordsArray = explode(",",$coords);
+  $lon = $coordsArray[0];
+  $lat = $coordsArray[1];
+  $node->title = $name;
+  $node->type = "centro_de_salud";
+  node_object_prepare($node);
+  $node->field_direccion['und'][0]['value'] = $direccion;
+  $node->field_tel_fono['und'][0]['value'] = $telefono;
+  $node->field_horario['und'][0]['value'] = $horario;
+  $node->field_location['und'][0] = array(
+    'input_format' => GEOFIELD_INPUT_LAT_LON,
+    'geom' => array('lat' => $lat, 'lon' => $lon),
+  );
+  $node->status = 1;
+  node_save($node); //Comentado para evitar duplicados
+  return $node;
+}
+
+/*CORDOBA BLOCKS*/
+/**
+ * Implements hook_block_info().
+ */
+function datauy_cordoba_block_info() {
+  $blocks = array();
+  $blocks['relevamientos'] = array(
+    'info' => t('Relevamientos Summary'),
+  );
+  $blocks['pmb'] = array(
+    'info' => t('PorMiBarrio Summary'),
+  );
+  $blocks['cat-menu'] = array(
+    'info' => t('Categories Menu'),
+  );
+
+  return $blocks;
+}
+/**
+ * Implements hook_block_configure().
+ */
+function datauy_cordoba_block_configure($delta='') {
+  $form = array();
+
+  switch($delta) {
+    case 'relevamientos' :
+      // Text field form element
+      $form['text_body'] = array(
+        '#type' => 'text_field',
+        '#title' => t('Block description:'),
+        '#default_value' => variable_get('relevamientos_desc', 'Resumen de relevamientos generados para la categoría. Sólo se muestran datos cuantitativos, puede acceder a todos los relevamientos <a href="/">aquí</a>'),
+      );
+    break;
+    case 'pmb' :
+      // Text field form element
+      $form['text_body'] = array(
+        '#type' => 'text_field',
+        '#title' => t('Block description'),
+        '#default_value' => variable_get('pmb_desc', 'Resumen de reportes generados para la categoría. Sólo se muestran datos cuantitativos, puede acceder a todos los reportes <a href="/">aquí</a>'),
+      );
+  }
+  return $form;
+}
+/*
+* Implements hook_block_save().
+*/
+function datauy_cordoba_block_save($delta = '', $edit = array()) {
+  switch($delta) {
+    case 'relevamientos' :
+      variable_set('relevamientos_desc', $edit['text_body']['value']);
+    break;
+    case 'pmb' :
+      variable_set('pmb_desc', $edit['text_body']['value']);
+    break;
+  }
+}
+
+function datauy_cordoba_block_view($delta='') {
+  $block = array();
+
+  $uri = explode('/', $_GET['q']);
+  $result = '';
+  if ( isset($uri['2']) ){
+    switch($delta) {
+      case 'relevamientos' :
+        $result = relevamientos_block_render($uri['2']);
+        break;
+      case 'pmb' :
+        $result = pmb_block_render($uri['2']);
+        break;
+      case 'cat-menu' :
+        $result = cat_menu_block_render();
+        break;
+    }
+  }
+  $block['content'] = array(
+    'variable' => array(
+      '#type' => 'markup',
+      '#markup' => $result,
+    ),
+  );
+  return $block;
+}
+
+function cat_menu_block_render(){
+
+}
+function relevamientos_block_render($tid){
+  //Get taxonomy_term
+  $result = 'Aún no hay relevamientos en esta categoría';
+  //$term = taxonomy_term_load($uri['2']);
+  switch ($tid){
+    case '14':
+      $nodes = datauy_cordoba_search_nodes('relevamiento_pp');
+      if ($nodes) {
+        $average_nodes = array();
+        foreach ($nodes as $nid => $no ) {
+          $node = node_load($nid);
+          $cpc = $node->field_cpc_de_pertenencia['und']['0']['target_id'];
+          if (isset($average_nodes[$cpc])){
+            if ( $average_nodes[$cpc]['created'] <= $node->created ) {
+              $average_nodes[$cpc]['created'] = $node->created;
+              $average_nodes[$cpc]['date'] = $node->field_diagnostico_date['und']['0'];
+              $average_nodes[$cpc]['diagnostico'] = $node->field_diagnostico['und']['0']['value'];
+              $average_nodes[$cpc]['cabildos'] = $node->field_cabildos['und']['0']['value'];
+              $average_nodes[$cpc]['talleres_pp'] = $node->field_talleres_pp['und']['0']['value'];
+            }
+          }
+          else {
+            $average_nodes[$cpc] = array(
+              'created' => $node->created,
+              'date' => $node->field_diagnostico_date['und']['0'],
+              'diagnostico' => $node->field_diagnostico['und']['0']['value'],
+              'cabildos' => $node->field_cabildos['und']['0']['value'],
+              'talleres_pp' => $node->field_talleres_pp['und']['0']['value'],
+            );
+          }
+        }
+        $count = array(
+          'diagnostico' => 0,
+          'cabildos' => 0,
+          'talleres_pp' => 0,
+        );
+        foreach ($average_nodes as $cpc => $values) {
+          $count['diagnostico'] += $values['diagnostico'];
+          $count['cabildos'] += $values['cabildos'];
+          $count['talleres_pp'] += $values['talleres_pp'];
+        }
+        $total = sizeof($average_nodes);
+        $result = '<h3>Dignósticos: '.$count['cabildos'].'/'.$total.'</h3><h3>Cabildos: '.$count['diagnostico'].'/'.$total.'</h3><h3>Talleres: '.$count['talleres_pp'].'/'.$total.'</h3>';
+      }
+      else {
+        $result = 'Aún no hay informes para la categoría';
+      }
+      break;
+    default:
+      $result = 'Aún no hay informes para la categoría';
+  }
+  return $result;
+}
+
+function pmb_block_render($tid){
+
+  /*$json = file_get_contents('https://reportes.reportaciudad.org/api/reportsByState?api_key=1234&from=02-08-2017&body_id=1&gid=17');
+  $obj = json_decode($json);
+  foreach ($obj as $state_value) {
+    $result = '<h3>En estado '.$state_value->state.': '.$state_value->reports.'</h3>';
+  }*/
+  return '';
+}
+/**
+ * Implements hook_mail().
+
+function hook_mail($key, &$message, $params) {
+  $message['headers']['Content-Type'] = 'text/html; charset=UTF-8; ; format=flowed;';
+  switch ($key)
+  {
+      case 'test':
+        $body = $params['body'];
+        $message['subject'] = t('Test requested');
+        break;
+  }
+  $message['body'][] = $body;
+}
+*/
+
+function datauy_cordoba_test_duplicate_metas(){
+  print '<br>ARRANCA: TEST<pre>';
+  $node = node_load(2143);
+  exit();
+  $objectives = datauy_cordoba_search_nodes('objetivos');
+  foreach (array_keys($objectives) as $nid) {
+    print '<br>Objective:'.$nid.'<br>';
+    $nodes = datauy_cordoba_search_nodes_by_parent($nid);
+    $meta_keys = array();
+    $meta_delete = array();
+    foreach ( array_keys($nodes) as $meta_id) {
+      $meta = node_load($meta_id);
+      if ( isset($meta->field_external_id['und']) ){
+        $ext_id = $meta->field_external_id['und']['0']['value'];
+        print '<br>'.$meta_id.' -> '.$ext_id;
+        if ( isset($meta_keys[$ext_id]) ){
+          $meta_delete[] = $meta_id;
+        }
+        else {
+          $meta_keys[$ext_id] = $meta_id;
+        }
+      }
+      else {
+        watchdog('datauy_cordoba', 'Meta sin external:'.print_r($meta, TRUE) , array(), WATCHDOG_ALERT);
+      }
+    }
+    if (!empty($meta_delete)) {
+      watchdog('datauy_cordoba', 'Borrando metas duplicadas del objetivo (nid):'.$nid.print_r($meta_delete, TRUE) , array(), WATCHDOG_ALERT);
+      node_delete_multiple($meta_delete);
+    }
+    print '<br>';
+  }
+  exit();
+}
+
+/*CORDOBA API*/
+function datauy_cordoba_add_objective($form, &$form_state){
+  $form['explain'] = array(
+        '#type' => 'item',
+        '#markup' => "<h2>Importar datos de objetivos de la Municipalidad</h2><br>
+        <p>Los datos se solicitan con el ID, para consultarlos desde la API: https://gobiernoabierto.cordoba.gob.ar/api/objetivo/</p>",
+      );
+
+  $form['external_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('ID municipio:'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Importar'),
+  );
+
+  $form['update'] = array(
+    '#type' => 'submit',
+    '#value' => t('Actualizar metas'),
+  );
+  $form['updated'] = array(
+    '#type' => 'submit',
+    '#value' => t('Actualizar indicadores'),
+  );
+
+  return $form;
+}
+
+function datauy_cordoba_add_objective_submit($form, &$form_state){
+  if ( !empty($form_state['values']['external_id']) ) {
+    if ( $form_state['values']['external_id'] == 'sabe' )
+    $exte = 0;
+    else
+    $exte = $form_state['values']['external_id'];
+
+    if ( $form_state['values']['op'] == 'Actualizar metas' ) {
+      datauy_cordoba_pm_get_metas($exte);
+    }
+    elseif ( $form_state['values']['op'] == 'Actualizar indicadores' ) {
+      datauy_cordoba_pm_get_indicadores($exte);
+    }
+    else {
+      $object = datauy_cordoba_api_call('https://gobiernoabierto.cordoba.gob.ar/api/objetivo/', 'objetivos');
+      $continue = 1;
+      while ( $object->next != NULL && $continue ) {
+        foreach ($object->results as $result) {
+          if ( $result->id == $exte ){
+            datauy_cordoba_check_difference(array($result), 'objetivos');
+            $continue = 0;
+            drupal_set_message('Se ha creado el objetivo');
+            break;
+          }
+        }
+      }
+    }
+  }
+}
+
+function datauy_cordoba_pm_get_metas($ext_id = 0){
+  if ($ext_id){
+    $obj = datauy_cordoba_node_search($ext_id, 'objetivos');
+    if ($obj){
+      $ext_obj = $obj->field_external_id['und']['0']['value'];
+      datauy_cordoba_pm_get_objects(array(
+        array('https://gobiernoabierto.cordoba.gob.ar/api/meta?objetivo_id='.$ext_obj, 'metas')
+      ));
+    }
+  }
+  else {
+    $objectives = datauy_cordoba_search_nodes('objetivos');
+    foreach (array_keys($objectives) as $nid) {
+      $objective = node_load($nid);
+      $ext_obj = $objective->field_external_id['und']['0']['value'];
+      datauy_cordoba_pm_get_objects(array(
+        array('https://gobiernoabierto.cordoba.gob.ar/api/meta?objetivo_id='.$ext_obj, 'metas')
+      ));
+    }
+  }
+}
+function datauy_cordoba_pm_get_indicadores($ext_id = 0){
+  if ($ext_id){
+    $ext_ids = explode(',', $ext_id);
+    foreach ($ext_ids as $external) {
+      datauy_cordoba_pm_get_objects(array(
+        array('https://gobiernoabierto.cordoba.gob.ar/api/indicador_de_metas?meta_id='.$external, 'indicadores_municipales')
+      ));
+    }
+  }
+  else {
+    $object = datauy_cordoba_search_nodes('metas');
+    foreach (array_keys($object) as $nid) {
+      $objective = node_load($nid);
+      $ext_obj = $objective->field_external_id['und']['0']['value'];
+      datauy_cordoba_pm_get_objects(array(
+        array('https://gobiernoabierto.cordoba.gob.ar/api/indicador_de_metas?meta_id='.$ext_obj, 'indicadores_municipales')
+      ));
+    }
+  }
+}
+
+function datauy_cordoba_pm_get_objects($objects = array()){
+  //EN CASO QUE HAYAN CAMBIOS EN ALGUNA DE LA ESTRUCTURA SE NOTIFICA
+  #$vocab = taxonomy_vocabulary_machine_name_load('plan_de_metas');
+  /*$objects = array(
+    array('https://gobiernoabierto.cordoba.gob.ar/api/objetivo/', 'objetivos'),
+    array('https://gobiernoabierto.cordoba.gob.ar/api/meta/', 'metas'),
+    array('https://gobiernoabierto.cordoba.gob.ar/api/indicador_de_metas/', 'indicadores_municipales'),
+  );*/
+  foreach ($objects as $api_call) {
+    watchdog('datauy_cordoba', 'Calling API: '.$api_call['0'] , array());
+    $type = $api_call['1'];
+    $object = datauy_cordoba_api_call($api_call['0'], $type);
+    while ( $object->next != NULL ) {
+      datauy_cordoba_check_difference($object->results, $type);
+      $object = datauy_cordoba_api_call($object->next, $type);
+    }
+    datauy_cordoba_check_difference($object->results, $type);
+  }
+}
+
+function datauy_cordoba_api_call($url, $type){
+  $object_cont = file_get_contents($url);
+  $object_obj = json_decode($object_cont);
+  return $object_obj;
+}
+
+function datauy_cordoba_check_difference($results, $type){
+  foreach ($results as $result) {
+    $node = new stdClass();
+    $node->type = $type;
+    $node->status = 0;
+    node_object_prepare($node);
+    switch ($type) {
+      case 'objetivos':
+        $result->titulo = html_entity_decode($result->titulo);
+        $titulo_arr = explode(' ', $result->titulo);
+        $node->title = $titulo_arr['0'].' '.$titulo_arr['1'].' '.$titulo_arr['2'].' '.$titulo_arr['3'];
+        $node->body['und']['0']['value'] = $result->titulo;
+        $parent = 0;
+        break;
+      case 'metas':
+        $result->titulo = html_entity_decode($result->titulo);
+        $titulo_arr = explode(' ', $result->titulo);
+        $node->title = $titulo_arr['0'].' '.$titulo_arr['1'].' '.$titulo_arr['2'].' '.$titulo_arr['3'];
+        $node->body['und']['0']['value'] = $result->titulo;
+        $node->field_estado_de_avance['und']['0']['value'] = html_entity_decode($result->estado_de_avance);
+        $node->field_linea_base['und']['0']['value'] = html_entity_decode(strip_tags($result->linea_base));
+        $parent = array('field_objetivo', 'objetivos', $result->objetivo);
+        break;
+      case 'indicadores_municipales':
+        $node->status = 1;
+        $node->title = html_entity_decode($result->indicador);
+        $node->body['und']['0']['value'] = html_entity_decode($result->valor_indicador);
+        $parent = array('field_meta', 'metas', $result->meta);
+        break;
+      default:
+        # RISE ExEPTION
+        break;
+    }
+    //Check differences if exists
+    if ( $existing_node = datauy_cordoba_node_search($result->id, $type) ){
+      //Check modifications
+      $modified = 0;
+      if ( $node->title != $existing_node->title ){
+        //Notify
+        $message = 'CONTENT '.$existing_node->nid.' previous title: '.$existing_node->title;
+        $existing_node->title = $node->title;
+        $modified = 1;
+      }
+      if ( isset($existing_node->body['und']['0']['value']) ) {
+        if ( $node->body['und']['0']['value'] != $existing_node->body['und']['0']['value'] ){
+          //Notify
+          $message = 'Cambia body nid'.$existing_node->nid.' previous body: '.$existing_node->body['und']['0']['value'];
+          $existing_node->body['und']['0']['value'] = $node->body['und']['0']['value'];
+          $modified = 1;
+        }
+      }
+      elseif ( !empty($node->body['und']['0']['value']) ){
+        $message = 'NUEVO BODY para nid '.$existing_node->nid.' -> '.$node->body['und']['0']['value'];
+        $existing_node->body['und']['0']['value'] = $node->body['und']['0']['value'];
+        $modified = 1;
+      }
+      if ( isset($existing_node->field_estado_de_avance['und']) ) {
+        if ( $node->field_estado_de_avance['und']['0']['value'] != $existing_node->field_estado_de_avance['und']['0']['value'] ){
+          //Notify
+          $message = 'Cambia estado de avance nid '.$existing_node->nid.' previous: '.$existing_node->field_estado_de_avance['und']['0']['value'];
+          // Update node
+          $existing_node->field_estado_de_avance['und']['0']['value'] = $node->field_estado_de_avance['und']['0']['value'];
+          $modified = 1;
+        }
+      }
+      elseif ( isset($node->field_estado_de_avance['und']) && !empty($node->field_estado_de_avance['und']['0']['value']) ){
+        $message = 'NUEVO estado de avance para nid '.$existing_node->nid.' -> '.$node->field_estado_de_avance['und']['0']['value'];
+        $existing_node->field_estado_de_avance['und']['0']['value'] = $node->field_estado_de_avance['und']['0']['value'];
+        $modified = 1;
+      }
+      if ( isset($existing_node->field_linea_base['und']) ){
+        if ( $node->field_linea_base['und']['0']['value'] != $existing_node->field_linea_base['und']['0']['value'] ){
+          //Notify
+          $message = 'Cambia linea base para nid '.$existing_node->nid.' previous: '.$existing_node->field_linea_base['und']['0']['value'];
+          $existing_node->field_linea_base['und']['0']['value'] = $node->field_linea_base['und']['0']['value'];
+          $modified = 1;
+        }
+      }
+      elseif ( isset($node->field_linea_base['und']) && !empty($node->field_linea_base['und']['0']['value']) ){
+        $message = 'NUEVA linea base para nid '.$existing_node->nid.' -> '.$node->field_linea_base['und']['0']['value'];
+        $existing_node->field_linea_base['und']['0']['value'] = $node->field_linea_base['und']['0']['value'];
+        $modified = 1;
+      }
+      if ($modified){
+        node_save($existing_node);
+        watchdog('datauy_cordoba', 'Content changed '.$message , array(), WATCHDOG_ALERT);
+      }
+    }
+    else {
+      watchdog('datauy_cordoba', 'NEW node:'.print_r($existing_node, TRUE) , array(), WATCHDOG_ALERT);
+      $node->field_external_id['und']['0']['value'] = $result->id;
+      if ( $parent ){
+        //Get parent
+        $parent_node = datauy_cordoba_node_search($parent['2'], $parent['1']);
+        if (!$parent_node){
+          exit();
+        }
+        else {
+          $field = $parent['0'];
+          $node->$field = array('und' => array('0' => array('target_id' => $parent_node->nid)));
+        }
+      }
+      //Notify nuevo
+      node_save($node);
+    }
+  }
+}
+
+function datauy_cordoba_search_nodes($type){
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->addMetaData('account', user_load(1))
+    ->entityCondition('bundle', $type);
+    //->fieldCondition('field_category', 'tid', 'NULL', '!=');
+  $result = $query->execute();
+  if ( !empty($result['node']) ){
+    return $result['node'];
+    /*$query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'node')
+      ->propertyCondition('status', 1)
+      ->addMetaData('account', user_load(1))
+      ->entityCondition('bundle', $type)
+      ->propertyCondition('nid', array_keys($result['node']), 'not in');
+    $new_result = $query->execute();
+    if ( !empty($new_result['node']) ){
+      //node_delete_multiple(array_keys($new_result['node']));
+    }*/
+  }
+  return 0;
+}
+
+function datauy_cordoba_search_nodes_by_parent($nid, $type = 'metas'){
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->addMetaData('account', user_load(1))
+    ->entityCondition('bundle', $type)
+    ->fieldCondition('field_objetivo', 'target_id', $nid);
+  $result = $query->execute();
+  if ( !empty($result['node']) ){
+
+    return $result['node'];
+  }
+  return 0;
+}
+function datauy_cordoba_node_search($eid, $type){
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->addMetaData('account', user_load(1))
+    ->entityCondition('bundle', $type)
+    ->fieldCondition('field_external_id', 'value', $eid);
+  $result = $query->execute();
+  if ( !empty($result['node']) ){
+    $node_res = array_shift($result['node']);
+    return node_load($node_res->nid);
+  }
+  return 0;
+}
+
+function datauy_cordoba_taxonomy_search_node($tid){
+  $types = array('reportes');
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', $types, 'IN')
+    ->addMetaData('account', user_load(1))
+    ->fieldCondition('field_category', 'tid', $tid);
+  return $query->count()->execute();
+}
+
+function datauy_cordoba_form_user_register_form_alter(&$form, &$form_state) {
+  $form['#validate'][] = 'datauy_cordoba_user_register_validate';
+}
+function datauy_cordoba_user_register_validate($form, &$form_state) {
+  if ( sizeof(explode(' ', $form_state['values']['name'])) < 2 ){
+    //&& !$form_state['values']['center']
+    form_set_error('name', t('Please enter your complete name.'));
+  }
+}
+/*function datauy_cordoba_form_user_profile_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'datauy_cordoba_user_changing';
+}
+
+function datauy_cordoba_user_changing($form, &$form_state) {
+  if ( !empty($form_state['values']['pass']) ){
+    watchdog('datauy_cordoba', 'User changing PASS: '.print_r($form_state['values'], TRUE) , array());
+    $post_params['password'] = $form_state['values']['pass'];
+    $post_params['email'] = $form_state['values']['mail'];
+    $post_params['name'] = $form_state['values']['name'];
+    $post_params['remote_key'] = drupal_get_hash_salt();
+    $base_reports = variable_get('reportes_url', 'https://reportes.reportaciudad.org');
+    $url = $base_reports.'/auth/remote_auth/remote_user';
+    $submit = curl_init($url);
+    curl_setopt($submit, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($submit, CURLOPT_TIMEOUT, 60);
+    curl_setopt($submit, CURLOPT_POST, 1);
+    curl_setopt( $submit, CURLOPT_POSTFIELDS, http_build_query($post_params, '', '&') );
+    $response = curl_exec($submit);
+    if (!$response) {
+      watchdog('datauy_cordoba', 'Error modfying remote account:'.print_r($account, TRUE) , array(), WATCHDOG_ALERT);
+    }
+    else {
+      watchdog('datauy_cordoba', 'Response for remote account:'.print_r($response, TRUE) , array(), WATCHDOG_ALERT);
+    }
+    curl_close($submit);
+    $_SESSION['user_pass'] = $form_state['values']['pass'];
+    //$form_state['rebuild'] = TRUE;
+    $form_state['redirect'] = 'cordoba-login';
+    $GLOBALS['destination'] = 'cordoba-login';
+  }
+}
+
+function datauy_cordoba_form_user_login_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'datauy_cordoba_user_being_in';
+}
+
+function datauy_cordoba_user_being_in($form, &$form_state){
+  $_SESSION['user_pass'] = $form_state['values']['pass'];
+  $GLOBALS['destination'] = 'cordoba-login';
+}
+function datauy_cordoba_logginin (){
+  global $user;
+
+  $pass = $_SESSION['user_pass'];
+  unset($_SESSION['user_pass']);
+  $base_reports = variable_get('reportes_url', 'https://reportes.reportaciudad.org');
+  return '<p>Dirigiéndolo a la página principal</p>'.$user->name.'
+  <script>
+  jQuery.ajax({
+    type: "GET",
+    url:"'.$base_reports.'/auth/ajax/sign_in?password_sign_in='.$pass.'&email='.$user->mail.'",
+    xhrFields: { withCredentials: true },
+    crossDomain: true,
+    success: function(data, textStatus, response){
+      window.location.href = "/";
+    },
+    error: function(data, textStatus, response){
+      window.location.href = "/";
+    }
+   });
+  </script>';
+}
+function datauy_cordoba_logout (){
+  $base_reports = variable_get('reportes_url', 'https://reportes.reportaciudad.org');
+  return '<p>Dirigiéndolo a la página principal</p>
+  <script>
+  jQuery.ajax({
+    type: "GET",
+    url:"'.$base_reports.'/auth/ajax/sign_out",
+    xhrFields: { withCredentials: true },
+    crossDomain: true,
+    success: function(data, textStatus, response){
+      window.location.href = "/";
+    },
+    error: function(data, textStatus, response){
+      window.location.href = "/";
+    }
+   });
+  </script>';
+}*/
+
+ function datauy_cordoba_get_cpc4zone($zone_id) {
+  print 'BEGINS CPC4ZONE: '.$zone_id;
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->propertyCondition('status', 1)
+    ->addMetaData('account', user_load(1))
+    ->entityCondition('bundle', 'cpcs')
+    ->fieldCondition('field_zonas_de_cpcs', 'target_id', $zone_id);
+  $result = $query->execute();
+  if ( !empty($result['node']) ){
+    return key($result['node']);
+  }
+  return 0;
+}
+function datauy_cordoba_cpc_assigne($form, &$form_state){
+  $cpc_id = 0;
+  $lat = $form_state['values']['field_location']['und']['0']['lat'];
+  $long = $form_state['values']['field_location']['und']['0']['lon'];
+  if ( $cpc_id = datauy_cordoba_belongs2CPC($lat, $long) ){
+    $form_state['values']['field_cpc_de_pertenencia']['und']['0']['target_id'] = $cpc_id;
+    watchdog('datauy_cordoba', "CPC PARA LOCATION lat: ".$lat.', long: '.$long.', CPC: '.$cpc_id, array(), WATCHDOG_ALERT);
+  }
+  else {
+    watchdog('datauy_cordoba', "NO CPC para lat: ".$lat.', long: '.$long, array(), WATCHDOG_ALERT);
+  }
+}
+function datauy_cordoba_test(){
+  print '<br>ARRANCA: TEST<pre>';
+  global $user;
+
+  if ( $user->uid == 1 ) {
+    //$nodes = entity_load('node');
+    $nodes = node_load_multiple( array(2038, 925, 2011, 1931) );
+    foreach ($nodes as $node) {
+      if ( !in_array( $node->type, array('metas', 'objetivos', 'indicadores_municipales', 'capas_de_datos') ) ){
+        if ( isset($node->field_category['und']) ){
+          $node = datauy_cordoba_set_parents($node);
+        }
+        if ( isset($node->field_cpc_de_pertenencia) && !isset($node->field_cpc_de_pertenencia['und']) ){
+          $node = datauy_cordoba_set_cpc($node);
+        }
+        try {
+          node_save($node);
+          print 'Actualizado '.$node->nid;
+        }
+        catch(Exception $e) {
+          echo $e->getMessage();
+        }
+      }
+    }
+  }
+}
+function datauy_cordoba_belongs2CPC($lat, $long) {
+  $reference_point = array(
+    'lat' => $lat,
+    'lon' => $long
+  );
+  $polygon_nodes = node_load_multiple(array(2300,2301,23002,2303,2304,2305,2306,2307,2308,2309));
+  foreach ($polygon_nodes as $polygon_node) {
+    $polygon = geofield_proximity_polygon_extract($polygon_node->field_location['und']['0']);
+    $distance = geofield_proximity_polygon_distance_to_polygon($reference_point, $polygon, NULL);
+    if ( $distance == 0 ){
+      print "BELONGS TO POLYGON: ".$polygon_node->title;
+      $cpc_id = datauy_cordoba_get_cpc4zone($polygon_node->nid);
+      print "BELONGS TO CPC: ".$cpc_id;
+      return $cpc_id;
+    }
+  }
+  return 0;
+}
+function datauy_cordoba_get_categories_indexed(){
+  $terms = taxonomy_get_tree(2);
+  $terms_arr = array();
+  //Arrange terms by tid
+  foreach ($terms as $term) {
+    $terms_arr[$term->tid] = $term;
+  }
+  return $terms_arr;
+}
+
+function datauy_cordoba_set_cpc($node){
+  $lat = $node->field_location['und']['0']['lat'];
+  $long = $node->field_location['und']['0']['lon'];
+  if ( $cpc_id = datauy_cordoba_belongs2CPC($lat, $long) ){
+    $node->field_cpc_de_pertenencia['und']['0']['target_id'] = $cpc_id;
+    watchdog('datauy_cordoba', "CPC PARA LOCATION lat: ".$lat.', long: '.$long.', CPC: '.$cpc_id, array(), WATCHDOG_ALERT);
+  }
+  else {
+    watchdog('datauy_cordoba', "NO CPC para lat: ".$lat.', long: '.$long, array(), WATCHDOG_ALERT);
+  }
+  return $node;
+}
+
+function datauy_cordoba_set_parents($node){
+  $terms_arr = datauy_cordoba_get_categories_indexed();
+  //$node = node_load($nid_obj);//->nid);
+  $main_tree = array();
+  $parallel_trees = array();
+  print "\n\n$node->title, $node->type\n";
+  switch ($node->type) {
+    case 'cpcs':
+      $main_tree = array(11,14,145,15,16);
+      break;
+    case 'relevamiento_econom_a_social':
+      $main_tree = array(12,23,142);
+      break;
+    case 'centro_de_salud':
+      $main_tree = array(12,18,146);
+      break;
+    case 'centro_vecinal':
+      $main_tree = array(11,16,138);
+      break;
+    case 'escuela_municipal':
+      $main_tree = array(12,19,143);
+      break;
+    case 'organizacion_sociedad_civil':
+      $main_tree = array(11,17,139);
+      break;
+    case 'relevamiento_de_espacios_verdes':
+      $main_tree = array(13,3,132);
+      break;
+    default:
+      //Set tree for node
+      foreach ( $node->field_category['und'] as $ttid ) {
+        $cat_term = $terms_arr[$ttid['tid']];
+        if ( $cat_term->depth ){
+          if ( isset($main_tree['0']) ) {
+            //Term is not set in main
+            if ( $main_tree[$cat_term->depth -1] != $cat_term->parents['0'] ){
+              $pkey = datauy_cordoba_search_parallel($cat_term->parents['0'], $cat_term->depth - 1, $parallel_trees);
+              if ( $pkey === FALSE ){
+                // Term is not set, set hole tree
+                $parallel_trees[] = datauy_cordoba_set_tree($cat_term->tid, $cat_term->depth, $terms_arr);
+              }
+              else {
+                $parallel_trees[$pkey][$cat_term->depth] = $cat_term->tid;
+              }
+            }
+            else {
+              //Create parallel if term is not the same
+              if ( isset($main_tree[$cat_term->depth]) && $main_tree[$cat_term->depth] != $cat_term->tid ) {
+                $parallel_trees[] = datauy_cordoba_set_tree($cat_term->tid, $cat_term->depth, $terms_arr);
+              }
+              else {
+                $main_tree[$cat_term->depth] = $cat_term->tid;
+              }
+            }
+          }
+          else {
+            $main_tree = datauy_cordoba_set_tree($cat_term->tid, $cat_term->depth, $terms_arr);
+          }
+        }
+        else {
+          //Is depth 0, depth 0 is set and is not the same
+          if ( isset($main_tree['0']) && $main_tree['0'] != $cat_term->tid ){
+            $pkey = datauy_cordoba_search_parallel($cat_term->tid, $cat_term->depth, $parallel_trees);
+            if ( $pkey === FALSE ){
+              // Term is not set, set hole tree
+              $parallel_trees[] = datauy_cordoba_set_tree($cat_term->tid, $cat_term->depth, $terms_arr);
+            }
+          }
+          else {
+            $main_tree['0'] = $cat_term->tid;
+          }
+        }
+      }
+      //Get depth 3
+      if ( !isset($main_tree['2']) ){
+        foreach ($parallel_trees as $pkey => $ptree) {
+          if( sizeof($ptree) > 2 ){
+            $parallel_trees[$pkey] = $main_tree;
+            $main_tree = $ptree;
+            continue;
+          }
+        }
+      }
+      if ( !isset($main_tree['2']) ){
+        print "\nNOT SET FOR NODE: ".$node->nid;
+      }
+      foreach ($parallel_trees as $parallel_tree) {
+        foreach ( $parallel_tree as $parallel_term ) {
+          if (!in_array($parallel_term, $main_tree))
+            $main_tree[] = $parallel_term;
+        }
+      }
+      break;
+  }
+  //Limpiamos cats previas
+  $node->field_category['und'] = array();
+  foreach ($main_tree as $key => $value) {
+    $node->field_category['und'][$key]['tid'] = $value;
+  }
+  return $node;
+}
+
+function datauy_cordoba_search_parallel($tid, $depth, $parallels) {
+  foreach ($parallels as $pkey => $ptree) {
+    if ($parallels[$depth] == $tid){
+      return $pkey;
+    }
+  }
+  return FALSE;
+}
+function datauy_cordoba_set_tree($tid, $depth, $vtree) {
+  $tree = array();
+  $term = $vtree[$tid];
+  while ( $depth ) {
+    $tree[$depth] = $term->tid;
+    $tid = $term->parents['0'];
+    $term = $vtree[$tid];
+    $depth--;
+  }
+  $tree['0'] = $term->tid;
+  return $tree;
+}
+function datauy_cordoba_form_alter(&$form, &$form_state, $form_id ) {
+  $node = $form_state['node'];
+  if ( isset($form_state['field']['field_fotos']) && substr($form_id, 0, 7) != 'comment' ){
+    //New node hide fotos
+    if ( !isset($node->nid) || !$node->nid ) {
+      $form['field_fotos']['#access'] = 0;
+    }
+    $form['pud'] = array(
+      '#type' => 'plupload',
+      '#title' => t('Upload files'),
+      '#weight' => 4,
+      //'#description' => t('This multi-upload widget uses Plupload library.'),
+      '#autoupload' => TRUE,
+      '#autosubmit' => FALSE,
+      '#submit_element' => '#edit-field-fotos-und-0-upload',
+      '#upload_validators' => array(
+        'file_validate_extensions' => array('jpg jpeg gif png'), //'txt doc xls pdf ppt pps odt ods odp'),
+        //'my_custom_file_validator' => array('some validation criteria'),
+      ),
+      '#plupload_settings' => array(
+        'runtimes' => 'html5',
+        'chunk_size' => '512Kb',
+        //'max_file_size' => '',
+        'resize' => array('width' => '500', 'quality' => '100'),
+      ),
+      '#event_callbacks' => array(
+        //'FilesAdded' => 'Drupal.mymodule.filesAddedCallback',
+        'UploadComplete' => 'Drupal.datauy_cordoba.uploadCompleteCallback',
+      ),
+    );
+    $form['#submit'][] = 'datauy_cordoba_image_form_submit';
+  }
+  if ( !in_array( $node->type, array('metas', 'objetivos', 'indicadores_municipales', 'capas_de_datos') ) && isset($form['field_cpc_de_pertenencia']) ){
+    if ( !isset($node->nid) || !$node->nid ) {
+      if ( isset($form['field_not_in_map']) ) {
+        $form['field_not_in_map']['#access'] = 0;
+      }
+      if ( isset($form['field_cpc_de_pertenencia']) ) {
+        $form['field_cpc_de_pertenencia']['#access'] = 0;
+        $form['#submit'][] = 'datauy_cordoba_cpc_assigne';
+      }
+    }
+    //$form['field_not_in_map']['#access'] = 0;
+    //$form['field_cpc_de_pertenencia']['#access'] = 0;
+  }
+}
+
+function datauy_cordoba_image_form_submit($form, &$form_state) {
+  $scheme = variable_get('file_default_scheme', 'public') . '://';
+  $saved_files = array();
+  // We can't use file_save_upload() because of
+  // http://www.jacobsingh.name/content/tight-coupling-no-not
+  // file_uri_to_object();
+  $node = $form_state['node'];
+  $i = 0;
+  if ( isset($node->field_fotos['und']) ){
+    foreach ($node->field_fotos['und'] as $n_img) {
+      $i++;
+    }
+  }
+  foreach ($form_state['values']['pud'] as $uploaded_file) {
+    if ($uploaded_file['status'] == 'done') {
+      $source = $uploaded_file['tmppath'];
+      $destination = file_stream_wrapper_uri_normalize($scheme . $uploaded_file['name']);
+      // Rename it to its original name, and put it in its final home.
+      // Note - not using file_move here because if we call file_get_mime
+      // (in file_uri_to_object) while it has a .tmp extension, it horks.
+      $destination = file_unmanaged_move($source, $destination, FILE_EXISTS_RENAME);
+      $file = plupload_file_uri_to_object($destination);
+      file_save($file);
+      $saved_files[] = $file;
+      $form_state['values']['field_fotos']['und'][$i] = array(
+        'fid' => $file->fid,
+        'display' => 1,
+        'title' => $file->filename
+      );
+      $i++;
+    }
+    else {
+      // @todo: move this to element validate or something and clean up t().
+      form_set_error('pud', "Upload of {$uploaded_file['name']} failed");
+    }
+  }
+}
+?>
