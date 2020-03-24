@@ -80,7 +80,7 @@
       $nid = $_GET['load_nid'];
       $node = node_load($nid);
       $url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-      $imageURL = "https://reportaciudad.org/sites/reporta_ciudad/themes/lmdmc/logo.png";
+      $imageURL = "https://reportaciudad.org/sites/ReportaCiudad/themes/lmdmc/logo.png";
       if(isset($node->field_fotos['und'][0]['uri'])){
         $imageURL = file_create_url($node->field_fotos['und'][0]['uri']);
       }
