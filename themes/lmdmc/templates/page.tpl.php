@@ -72,7 +72,7 @@
  *
  * @ingroup templates
  */
-$base_url = "/sites/reporta_ciudad/themes/lmdmc";
+$base_url = "/sites/ReportaCiudad/themes/lmdmc";
 $userImage = null;
 if(isset($user->picture)){
   $file = file_load($user->picture);
@@ -85,7 +85,7 @@ if(isset($user->picture)){
 }
 ?>
 <div id="mobile-navigation">
-  <a href="#" class="category-menu"><img src="/sites/reporta_ciudad/themes/lmdmc/img/reportaciudad_arriba.png"></a>
+  <a href="#" class="category-menu"><img src="/sites/ReportaCiudad/themes/lmdmc/img/reportaciudad_arriba.png"></a>
   <script>
   jQuery("a.category-menu").click(function(event){
     event.preventDefault();
@@ -104,7 +104,7 @@ if(isset($user->picture)){
   <?php endif; ?>
 </div>
 <div class="main_nav column col-md-3">
-  <h1><a href="/"><img src="/sites/reporta_ciudad/themes/lmdmc/logo.svg"></a></h1>
+  <h1><a href="/"><img src="/sites/ReportaCiudad/themes/lmdmc/logo.svg"></a></h1>
   <h3>
       QUERÉS SABER<br>
       FILTRÁ POR CATEGORÍAS
@@ -137,7 +137,7 @@ if(isset($user->picture)){
 <div class="main_area column col-md-7">
   <div class="row">
     <div class="main_header col-md-12">
-      <a href="/node/add/reportes" class="button">Reportar ahora</a>
+      <a href="/node/add/reportes" class="button reportar">Reportar ahora</a>
       <?php if ($logged_in): ?>
         <a href="/nuevo/relevamiento" class="button button_secondary">Relevar ahora</a>
       <?php else: ?>
