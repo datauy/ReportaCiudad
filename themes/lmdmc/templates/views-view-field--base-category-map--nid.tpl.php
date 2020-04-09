@@ -23,13 +23,13 @@
  */
 ?>
 <a class="ver_detalles" onclick="
-var nodeURL = 'https://reportaciudad.org/node-view/<?php print_r($row->nid); ?>';
+var nodeURL = '<?php print $base_url.'/node-view/'.$row->nid; ?>';
 var nodeTitle = 'Reporta Ciudad';
 jQuery('#metaURL').attr('content', nodeURL);
 jQuery('#metaTitle').attr('content', nodeTitle);
 jQuery.ajax({
   type: 'GET',
-  url: '/node-view/<?php print_r($row->nid); ?>',
+  url: '/node-view/<?php print $row->nid; ?>',
   success: function(data, textStatus, response){
     jQuery('#report-over').empty();
     jQuery('#report-over').append(data);

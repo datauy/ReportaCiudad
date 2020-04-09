@@ -132,6 +132,13 @@ h2 {
    ========================================================================== */
 
 .main_header .button { float: left; margin: 15px 0 0 15px; }
+.reportar.button {
+  background: #ff9445;
+	color: #fff;
+}
+.reportar.button:hover {
+  background: #f58634;
+}
 
 /* ==========================================================================
    Main Nav Styles
@@ -271,8 +278,8 @@ text-align: left;
 color: #ffffff;
 }
 
-.main_nav .button { display: inline-block; margin:25px 0 0 0;border-color: #9b9b9b; color: #9b9b9b; }
-.main_nav .button:hover { background: #9b9b9b; color: #fff; }
+.main_nav .button { display: inline-block; margin:25px 0 0 0;border-color: #9b9b9b; background: #9b9b9b; color: #fff;}
+.main_nav .button:hover { color: ##3e3e3e; background: #c4bfbf;  }
 
 .main_nav h1 {margin: 70px 40px 0 0}
 
@@ -872,6 +879,12 @@ a.leaflet-control-draw-polyline{
 }
 .page-taxonomy-term .main_area .row {
 	overflow: hidden;
+}
+.page-taxonomy-term article {
+	display: none;
+}
+.page-taxonomy-term .text-center {
+	display: none;
 }
 .taxonomy-term{
   width: 100%;
