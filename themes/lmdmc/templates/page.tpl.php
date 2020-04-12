@@ -106,28 +106,18 @@ if(isset($user->picture)){
 <div class="main_nav column col-md-3">
   <h1><a href="/"><img src="/sites/ReportaCiudad/themes/lmdmc/logo.svg"></a></h1>
   <h3>
-      QUERÉS SABER<br>
-      FILTRÁ POR CATEGORÍAS
+      VER REPORTES
   </h3>
-
   <nav>
     <a id="democracia_participacion_menu" class="democracia_participacion cat-menu" href="#">Democracia y participación</a>
-
     <a id="desarollo_urbano_menu" class="desarollo_urbano term-12 cat-menu" href="#">Desarrollo urbano sustentable</a>
-
     <a id="inclusion_equidad_menu" class="inclusion_equidad term-12 cat-menu" href="#">Inclusión y equidad</a>
-
   </nav>
-
-
   <a href="/como-funciona" class="button">¿CÓMO FUNCIONA?</a>
-
-
   <div class="bottom_nav">
       <ul>
         <li><a href="/contacto">Contacto</a></li>
         <li><a href="/acerca">Quiénes somos</a></li>
-        <li><a href="/integrantes-de-la-red">Red de Monitoreo</a></li>
         <li><a href="/estadisticas">Estadísticas</a></li>
         <li><a href="/preguntas">Preguntas Frecuentes</a></li>
       </ul>

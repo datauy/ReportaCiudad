@@ -71,17 +71,6 @@
   <div id="categories-map">
     <?php print views_embed_view('base_category_map', 'block', $term->tid); ?>
   </div>
-  <div class="category_toast <?php echo $cssParentClass; ?>">
-     <div class="row">
-        <div class="col-md-6 category-desc">
-          <h4><?php echo strtoupper($parent_name); ?></h4>
-          <span><?php echo $term->name; ?></span>
-        </div>
-         <div class="col-md-6 show-objectives">
-            <a class="objetives_button show" href="#">Conocé las metas que propone el Gobierno municipal</a>
-        </div>
-     </div>
-  </div>
   <?php if($remoteGroups!=""){ ?>
     <script type="text/javascript">
       var remotePMBGroups = '<?php echo $remoteGroups;?>';
@@ -97,11 +86,6 @@
       Drupal.behaviors.parentName = '<?php echo $parent_name;?>';
     </script>
   <?php } ?>
-</div>
-<div class="objetivos_table">
-  <div id="categories-municipio">
-  <?php print views_embed_view('objetivos', 'block', $term->tid); ?>
-</div>
 </div>
 <?php if ( isset($_GET['load_nid']) && $_GET['load_nid'] ): ?>
   <script>
