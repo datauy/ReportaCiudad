@@ -75,7 +75,7 @@ function setDataUyLeafletCustoms(){
 function createMapAndSetEvents(idContainer, idLocationElement, nameLocationElement){
   $("#"+idContainer).empty();
   $("#"+idContainer).height(440);
-  $("#"+idContainer).append("<div id='pin_description'>Primero seleccione la ubicaciónen el mapa</div>");
+  $("#"+idContainer).append("<div id='pin_description'><p>Ubicar reporte:</p></div>");
   $("#"+idContainer).append("<div id='map_selector'></div>");
   $("#"+idContainer).append("<input id='"+idLocationElement+"' type='hidden' name='"+nameLocationElement+"' value=''>");
   $("#map_selector").height(400);
@@ -322,7 +322,8 @@ function createPinNodeSelectorAndSetEvents(map,type,idContainer,url, idNodeSelec
 
 function addGeolocateButton(map,idContainer){
   $("#"+idContainer).append("<div id='gps_control' class='control_over_map'></div>");
-  $('#gps_control').click(function() {
+  $('#gps_control').click(function(e) {
+    e.preventDefault();
     geolocate(map,true);
   });
 }

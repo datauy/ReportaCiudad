@@ -1417,9 +1417,10 @@ h2.comment-form {
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
-	position: relative;
-	top: -320px;
+	position: absolute;
+	top: 80px;
 	left: 9px;
+	cursor: pointer;
 }
 
 /**********
@@ -1955,4 +1956,18 @@ input#getcounts{
 
 .three-quarters-loader{
   margin: 0 auto 0 auto;
+}
+/** REPORTES **/
+.node-reportes-form .form-item-title {
+	display: none;
+}
+.node-reportes-form #edit-body-und-0-format {
+	display: none;
+}
+.plupload_scroll .plupload_filelist {
+	height: 56px;
+}
+#edit-pud_browse {
+	font-size: 20px;
+	margin-top: -8px;
 }
