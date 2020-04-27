@@ -191,12 +191,26 @@ function datauy_cordoba_form_reportes_node_form_alter(&$form, &$form_state) {
     }
     $form['parents'] = array('#type' => 'hidden', '#value' => $parents);
     $selected = isset($form_state['values']['cat']) ? $form_state['values']['cat'] : 0;
+    drupal_add_js('jQuery(document).ready(function () {
+      jQuery("#edit-cat").change(function(e){
+        e.preventDefault();
+        if (jQuery("#leaflet-widget_field-location-input").val() == "") {
+          alert("Por favor, primero seleccione una ubicación");
+        }
+      });
+    });', array(
+      'type' => 'inline',
+      'scope' => 'header',
+    //  'weight' => 5,
+    ));
+    $form['title']['#required'] = FALSE;
     $form['cat'] = array(
       '#type' => 'select',
       '#title' => t('Category'),
       '#required' => TRUE,
       '#weight' => -1,
       '#options' => $options,
+      '#default_value' => is_numeric($selected) ? $selected : '',
       '#ajax' => array(
         'callback' => 'ajax_subcat_dropdown_callback',
         'wrapper' => 'view-subcat-dropdown',
@@ -227,7 +241,9 @@ function datauy_cordoba_form_reportes_node_form_alter(&$form, &$form_state) {
     $form['#submit'][] = 'datauy_cordoba_report_submit';
   }
 }
+
 function datauy_cordoba_report_validate($form, &$form_state){
+  $form_state['values']['title'] = "Custom title";
   if (!$form_state['values']['subcat'])
     form_set_error('subcat', t('Por favor elija una Sub-categoría'));
 }
@@ -241,9 +257,12 @@ function datauy_cordoba_report_submit($form, &$form_state){
   //Limpiamos cats previas
   ksort($cat_tree);
   $form_state['values']['field_category']['und'] = array();
+  $title = "";
   foreach ($cat_tree as $key => $value) {
     $form_state['values']['field_category']['und'][$key]['tid'] = $value;
+    $title .= $terms_arr[$value]->name." ";
   }
+  $form_state['values']['title'] = $title;
 }
 // Ajax Call
 function ajax_subcat_dropdown_callback($form, $form_state) {
@@ -1561,10 +1580,11 @@ function datauy_cordoba_set_tree($tid, $depth, $vtree) {
   return $tree;
 }
 function datauy_cordoba_form_alter(&$form, &$form_state, $form_id ) {
-  $node = $form_state['node'];
+  if ( isset($form_state['node']) )
+    $node = $form_state['node'];
   if ( isset($form_state['field']['field_fotos']) && substr($form_id, 0, 7) != 'comment' ){
     //New node hide fotos
-    if ( !isset($node->nid) || !$node->nid ) {
+    if ( !isset($node) || !isset($node->nid) || !$node->nid ) {
       $form['field_fotos']['#access'] = 0;
     }
     $form['pud'] = array(
@@ -1592,7 +1612,7 @@ function datauy_cordoba_form_alter(&$form, &$form_state, $form_id ) {
     );
     $form['#submit'][] = 'datauy_cordoba_image_form_submit';
   }
-  if ( !in_array( $node->type, array('metas', 'objetivos', 'indicadores_municipales', 'capas_de_datos') ) && isset($form['field_cpc_de_pertenencia']) ){
+  if ( isset($node) && !in_array( $node->type, array('metas', 'objetivos', 'indicadores_municipales', 'capas_de_datos') ) && isset($form['field_cpc_de_pertenencia']) ){
     if ( !isset($node->nid) || !$node->nid ) {
       if ( isset($form['field_not_in_map']) ) {
         $form['field_not_in_map']['#access'] = 0;

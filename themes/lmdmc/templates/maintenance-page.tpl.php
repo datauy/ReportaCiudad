@@ -74,7 +74,7 @@
  */
 ?>
 <div class="main_area column col-md-7">
-  <span>El 19/9 conocé</span><img src="/sites/ReportaCiudad/themes/lmdmc/logo.svg">
+  <img src="/sites/ReportaCiudad/themes/lmdmc/logo.svg"><span>Nos estamos actualizando... volvemos en un momento</span>
 </div>
 <style>
 @font-face {
