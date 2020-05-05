@@ -96,10 +96,8 @@ if(isset($user->picture)){
   </script>
   <a href="/node/add/reportes" class="button">Reportar</a>
   <?php if ($logged_in): ?>
-    <a href="/nuevo/relevamiento" class="button button_secondary">Relevar</a>
     <a href="/user/logout" class="button btn-warning">Salir</a>
   <?php else: ?>
-    <a href="/relevar-login" class="button button_secondary">Relevamientos</a>
     <a href="/user" class="button btn-info">Ingresar</a>
   <?php endif; ?>
 </div>
@@ -128,11 +126,6 @@ if(isset($user->picture)){
   <div class="row">
     <div class="main_header col-md-12">
       <a href="/node/add/reportes" class="button reportar">Reportar ahora</a>
-      <?php if ($logged_in): ?>
-        <a href="/nuevo/relevamiento" class="button button_secondary">Relevar ahora</a>
-      <?php else: ?>
-        <a href="/relevar-login" class="button button_secondary">Relevar ahora</a>
-      <?php endif; ?>
     </div>
     <?php if (!empty($page['sidebar_first'])): ?>
       <aside class="col-sm-3" role="complementary">
@@ -208,6 +201,7 @@ if(isset($user->picture)){
       </div>
    </div>
    <div class="feed_container col-md-12">
+     <?php // TODO: filtrar usuarios moderadores  ?>
      <?php print render(module_invoke('menu', 'block_view', 'menu-moderaci-n'));?>
       <div class="resume_feed">
         <!-- Nav tabs -->
