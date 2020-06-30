@@ -353,8 +353,12 @@ function datauy_cordoba_ajax_callback($callback) {
     $comments = comment_load_multiple($cids);
     $html .= '<div class="node-comments">'.drupal_render(comment_view_multiple($comments, $node)).'</div>';
   }
+  $node_form = new stdClass;
+  $node_form->type = $node->type;
+  $node_form->language = 'es';
+  $node_form->nid = $node->nid;
   if ( $user->uid ){
-    $html .= '<div class="node-comments">'.drupal_render(drupal_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid))) .'</div>';
+    $html .= '<div class="node-comments">'.drupal_render(drupal_get_form("comment_node_{$node->type}_form", $node_form)) .'</div>';
     $html .= "<script>
       var recapt = jQuery('.g-recaptcha').get(0);
       console.log(recapt);

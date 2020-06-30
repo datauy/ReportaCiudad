@@ -204,11 +204,6 @@ if(isset($user->picture)){
      <?php // TODO: filtrar usuarios moderadores  ?>
      <?php print render(module_invoke('menu', 'block_view', 'menu-moderaci-n'));?>
       <div class="resume_feed">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class=""><a href="#tab_relevamientos" aria-controls="tab_relevamientos" role="tab" data-toggle="tab" aria-expanded="false">Resumen de relevamientos</a></li>
-          <li role="presentation" class="active"><a href="#tab_mapeos" aria-controls="tab_mapeos" role="tab" data-toggle="tab" aria-expanded="true">Resumen de reportes</a></li>
-        </ul>
         <?php
         $uri = explode('/', $_GET['q']);
         $result = '';
@@ -219,29 +214,7 @@ if(isset($user->picture)){
           $category = 0;
         }
         ?>
-        <!-- Tab panes -->
         <div class="tab-content">
-          <div role="tabpanel" class="tab-pane" id="tab_relevamientos">
-            <?php
-            if ( $category ) {
-              print views_embed_view('resumen_relevamientos', 'default', $uri['2']);
-            }
-            else {
-              print views_embed_view('resumen_relevamientos', 'default');
-            }
-            ?>
-            <div class="reports_pormibarrio">
-              <h3>Últimos relevamientos</h3>
-              <?php
-              if ( $category ) {
-                print views_embed_view('ultimos_relevamientos', 'default', $uri['2']);
-              }
-              else {
-                print views_embed_view('ultimos_relevamientos', 'default');
-              }
-              ?>
-            </div>
-          </div>
           <div role="tabpanel" class="tab-pane active" id="tab_mapeos">
             <?php if ( $category ) {
               print views_embed_view('resumen_reportes', 'block', $uri['2']);

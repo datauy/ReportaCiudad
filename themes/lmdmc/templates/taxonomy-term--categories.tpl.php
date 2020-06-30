@@ -40,16 +40,6 @@
  *
  * @ingroup themeable
  */
-  $remoteGroups = "";
-  if(isset($term->field_remote_groups) && isset($term->field_remote_groups['und'])){
-   foreach ($term->field_remote_groups['und'] as $key => $group) {
-     $remoteGroups .= $group['value'] . ",";
-   }
-  }
-  $remoteGroups = rtrim($remoteGroups,",");
-  if($remoteGroups){
-   variable_set("remoteGroups",$remoteGroups);
-  }
   $parents = taxonomy_get_parents($term->tid);
   $parent_name = null;
   foreach ($parents as $key => $parent) {
@@ -71,21 +61,12 @@
   <div id="categories-map">
     <?php print views_embed_view('base_category_map', 'block', $term->tid); ?>
   </div>
-  <?php if($remoteGroups!=""){ ?>
-    <script type="text/javascript">
-      var remotePMBGroups = '<?php echo $remoteGroups;?>';
-      Drupal.behaviors.remotePMBGroups = '<?php echo $remoteGroups;?>';
-      var parentName = '<?php echo $parent_name;?>';
-      Drupal.behaviors.parentName = '<?php echo $parent_name;?>';
-    </script>
-  <?php }else{ ?>
-    <script type="text/javascript">
-      var remotePMBGroups = null;
-      Drupal.behaviors.remotePMBGroups = null;
-      var parentName = '<?php echo $parent_name;?>';
-      Drupal.behaviors.parentName = '<?php echo $parent_name;?>';
-    </script>
-  <?php } ?>
+  <script type="text/javascript">
+    var remotePMBGroups = null;
+    Drupal.behaviors.remotePMBGroups = null;
+    var parentName = '<?php echo $parent_name;?>';
+    Drupal.behaviors.parentName = '<?php echo $parent_name;?>';
+  </script>
 </div>
 <?php if ( isset($_GET['load_nid']) && $_GET['load_nid'] ): ?>
   <script>
