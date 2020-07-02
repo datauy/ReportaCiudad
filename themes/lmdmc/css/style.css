@@ -121,6 +121,9 @@ h2 {
 	-webkit-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
 }
+.button.btn-warning {
+	color: #fff;
+}
 
 .button:hover { background: #f58634;color: #fff;text-decoration: none; }
 
@@ -769,6 +772,9 @@ overflow: hidden;
 #data-logo {
 	margin: -8px 5%;
 }
+figure img.img-responsive {
+	height: 100%;
+}
 /* ==========================================================================
    Sections Styles
    ========================================================================== */
@@ -881,7 +887,6 @@ a.leaflet-control-draw-polyline{
 	overflow: hidden;
 }
 .page-taxonomy-term article {
-	display: none;
 }
 .page-taxonomy-term .text-center {
 	display: none;
@@ -912,6 +917,9 @@ section.col-sm-12 {
 .page-informes-relevamientos section.col-sm-12,
 .page-node section.col-sm-12 {
 	overflow: auto;
+}
+.node fieldset {
+	display: none;
 }
 ul {
   list-style: none;
@@ -1259,13 +1267,18 @@ h2.comment-form {
 		.column {
 			padding-left: 10px;
 		}
+		.main_nav img {
+			max-width: 74%;
+			padding: 20px;
+			margin-left: 30px;
+		}
 		#mobile-navigation {
 			display: block;
 			min-height: 50px;
 			margin: 10px 5% 0;
 		}
 		#mobile-navigation .button {
-			padding: 10px 4px;
+			padding: 10px;
 			font-size: 8px;
 			margin-left: 5px;
 			max-width: 25%;
@@ -1385,6 +1398,12 @@ h2.comment-form {
 		.overlay #comment-form {
 			margin: 0 5%;
 			width: 90%;
+		}
+		.node-left-cont {
+			width: 92%;
+		}
+		.node-right-cont {
+			width: 100%;
 		}
 	}
 
