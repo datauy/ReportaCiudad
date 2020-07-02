@@ -365,7 +365,9 @@ function datauy_cordoba_ajax_callback($callback) {
       if ( typeof recapt !== 'undefined' ){
         grecaptcha.render( recapt );
       }
-      </script>";
+      jQuery('[for=\"edit-comment-body-und-0-value\"]').html('Comentario *');
+      </script>
+      <style>fieldset {display: none;}</style>";
   }
   print $html;
 
