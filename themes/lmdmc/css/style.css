@@ -121,6 +121,7 @@ h2 {
 	-webkit-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
 }
+.button.btn-info, 
 .button.btn-warning {
 	color: #fff;
 }
@@ -1279,9 +1280,8 @@ h2.comment-form {
 		}
 		#mobile-navigation .button {
 			padding: 10px;
-			font-size: 8px;
+			font-size: 11px;
 			margin-left: 5px;
-			max-width: 25%;
 			float: left;
 			margin-top: 15px;
 		}

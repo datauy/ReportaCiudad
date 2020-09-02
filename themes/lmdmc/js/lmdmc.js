@@ -41,7 +41,7 @@ function setDataUyLeafletCustoms(){
   }
   else if($("body").hasClass("page-node-add")){
     //Estoy creando o editando un relevamiento cualquiera (debo levantar mapa pero no entidades referenciadas);
-	   createMapAndSetEvents("edit-field-location","leaflet-widget_field-location-input", "field_location[und][geom]");
+	   //createMapAndSetEvents("edit-field-location","leaflet-widget_field-location-input", "field_location[und][geom]");
     return false;
   }
   /*else if($("body").hasClass("page-taxonomy-term")){
