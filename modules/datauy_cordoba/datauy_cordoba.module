@@ -237,6 +237,7 @@ function datauy_cordoba_form_reportes_node_form_alter(&$form, &$form_state) {
         '#suffix' => '</div>',
         );
     }
+    $form['field_estado']['#access'] = 0;
     $form['#validate'][] = 'datauy_cordoba_report_validate';
     $form['#submit'][] = 'datauy_cordoba_report_submit';
   }
@@ -1610,6 +1611,15 @@ function datauy_cordoba_form_alter(&$form, &$form_state, $form_id ) {
         'chunk_size' => '512Kb',
         //'max_file_size' => '',
         'resize' => array('width' => '500', 'quality' => '100'),
+        'dragdrop' => false,
+        'buttons' => array(
+          'start' => false,
+          'stop' => false
+        ),
+        'views' => array(
+          'list' => false,
+          'default' => 'core',
+        )
       ),
       '#event_callbacks' => array(
         //'FilesAdded' => 'Drupal.mymodule.filesAddedCallback',
