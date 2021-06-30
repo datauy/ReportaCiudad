@@ -121,7 +121,7 @@ h2 {
 	-webkit-transition: all 0.1s ease-in-out;
     transition: all 0.1s ease-in-out;
 }
-.button.btn-info, 
+.button.btn-info,
 .button.btn-warning {
 	color: #fff;
 }
@@ -213,24 +213,12 @@ nav a:hover:after {
 	border-top: 3px solid #631e8f;
 }
 
-.category_toast.desarollo_urbano{
+.category_toast.desarrollo_urbano{
   border-top: 3px solid #6ea52e;
 }
 
-.category_toast.democracia_participacion {
+.category_toast.democracia_participa {
 	border-top: 3px solid #1f7fcc;
-}
-
-#inclusion_equidad.submenu .view-content {
-	background-color: #631e8f;
-}
-
-#desarollo_urbano.submenu .view-content {
-	background-color: #6ea52e;
-}
-
-#democracia_participacion.submenu .view-content {
-	background-color: #1f7fcc;
 }
 
 .submenu .view-content .views-row {
@@ -779,12 +767,48 @@ figure img.img-responsive {
 /* ==========================================================================
    Sections Styles
    ========================================================================== */
+.add-desarrollo_urbano a,
+.add-desarrollo_urbano h2,
+.desarrollo_urbano:before {
+	color: #FF9900;
+}
+.add-desarrollo_humano_social a,
+.add-desarrollo_humano_social h2,
+.desarrollo_humano_social:before {
+	color: #663399;
+}
+.add-educación_cultura a,
+.add-educación_cultura h2,
+.educación_cultura:before {
+	color: #FF0066;
+}
+.add-ecopop_deseco a,
+.add-ecopop_deseco h2,
+.ecopop_deseco:before {
+	color: #009933;
+}
+.add-ambiente a,
+.add-ambiente h2,
+.ambiente:before {
+	color: #009933;
+}
+.add-salud a,
+.add-salud h2,
+.salud:before {
+	color: #00CCCC;
+}
+.add-democracia_participa a,
+.add-democracia_participa h2,
+.democracia_participa:before { color: #3366CC;}
 
-.democracia_participacion:before { color: #1f7fcc;}
-.desarollo_urbano:before { color: #6ea52e;}
-.inclusion_equidad:before { color: #631d8f;}
 
-
+#desarrollo_urbano.submenu .view-content { background-color: #FF9900;}
+#desarrollo_humano_social.submenu .view-content { background-color: #663399;}
+#educación_cultura.submenu .view-content { background-color: #FF0066;}
+#ecopop_deseco.submenu .view-content { background-color: #009933;}
+#ambiente.submenu .view-content { background-color: #009933;}
+#salud.submenu .view-content { background-color: #00CCCC;}
+#democracia_participa.submenu .view-content { background-color: #3366CC;}
 /* vietnamese */
 @font-face {
   font-family: 'Montserrat';
@@ -891,6 +915,10 @@ a.leaflet-control-draw-polyline{
 }
 .page-taxonomy-term .text-center {
 	display: none;
+}
+.term-listing-heading {
+	position: relative;
+	z-index: 100;
 }
 .taxonomy-term{
   width: 100%;
@@ -1206,24 +1234,6 @@ h2.comment-form {
 	display: none;
 }
 
-.add-desarollo_urbano a {
-	color: #6ea52e;
-}
-.add-desarollo_urbano h2 {
-	color: #6ea52e;
-}
-.add-democracia_participacion a {
-	color: #1f7fcc;
-}
-.add-democracia_participacion h2 {
-	color: #1f7fcc;
-}
-.add-inclusion_equidad a {
-	color: #631d8f;
-}
-.add-inclusion_equidad h2 {
-	color: #631d8f;
-}
 
 /* Página de miembros */
 .view-miembros-de-la-red .view-header {
