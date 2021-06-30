@@ -9,9 +9,7 @@ function clickOnMenu(id){
   if(menu.className=="submenu show"){
     menu.className="submenu";
   }else{
-    $('#democracia_participacion').removeClass('show');
-    $('#desarollo_urbano').removeClass('show');
-    $('#inclusion_equidad').removeClass('show');
+    $('.cat-menu').removeClass('show');
     $('#'+id).addClass('show');
   }
 }
@@ -396,14 +394,9 @@ function createMap(id){
 
 
 $(document).ready(function(){
-  $('#democracia_participacion_menu').click(function() {
-      clickOnMenu("democracia_participacion");
-  });
-  $('#desarollo_urbano_menu').click(function() {
-      clickOnMenu("desarollo_urbano");
-  });
-  $('#inclusion_equidad_menu').click(function() {
-      clickOnMenu("inclusion_equidad");
+  $('.cat-menu').click(function() {
+    //console.log(this);
+    clickOnMenu( this.id.replace('_menu','') );
   });
   setDataUyLeafletCustoms();
   $('.objetives_button').click(function() {

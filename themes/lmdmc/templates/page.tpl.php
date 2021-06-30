@@ -107,9 +107,13 @@ if(isset($user->picture)){
       VER REPORTES
   </h3>
   <nav>
-    <a id="democracia_participacion_menu" class="democracia_participacion cat-menu" href="#">Democracia y participación</a>
-    <a id="desarollo_urbano_menu" class="desarollo_urbano term-12 cat-menu" href="#">Desarrollo urbano sustentable</a>
-    <a id="inclusion_equidad_menu" class="inclusion_equidad term-12 cat-menu" href="#">Inclusión y equidad</a>
+    <a id="desarrollo_urbano_menu" class="desarrollo_urbano term-12 cat-menu" href="#">Desarrollo urbano sustentable</a>
+    <a id="desarrollo_humano_social_menu" class="desarrollo_humano_social cat-menu" href="#">Desarrollo humano y social</a>
+    <a id="educación_cultura_menu" class="educación_cultura term-12 cat-menu" href="#">Educación y Cultura</a>
+    <a id="ecopop_deseco_menu" class="ecopop_deseco cat-menu" href="#">Economía popular y desarrollo económico</a>
+    <a id="ambiente_menu" class="ambiente term-12 cat-menu" href="#">Ambiente</a>
+    <a id="salud_menu" class="salud term-12 cat-menu" href="#">Salud</a>
+    <a id="democracia_participa_menu" class="democracia_participa term-12 cat-menu" href="#">Democracia y participación</a>
   </nav>
   <a href="/como-funciona" class="button">¿CÓMO FUNCIONA?</a>
   <div class="bottom_nav">
@@ -156,17 +160,30 @@ if(isset($user->picture)){
       <?php endif; ?>
       <?php print render($page['content']); ?>
     </section>
-
-    <div id="democracia_participacion" class="submenu">
-      <?php print views_embed_view('menu_category', 'block', 11); ?>
-    </div>
-
-    <div id="desarollo_urbano" class="submenu">
+    <div id="desarrollo_urbano" class="submenu">
       <?php print views_embed_view('menu_category', 'block', 13); ?>
     </div>
 
-    <div id="inclusion_equidad" class="submenu">
+    <div id="desarrollo_humano_social" class="submenu">
       <?php print views_embed_view('menu_category', 'block', 12); ?>
+    </div>
+
+    <div id="educación_cultura" class="submenu">
+      <?php print views_embed_view('menu_category', 'block', 183); ?>
+    </div>
+
+
+    <div id="ecopop_deseco" class="submenu">
+      <?php print views_embed_view('menu_category', 'block', 197); ?>
+    </div>
+    <div id="ambiente" class="submenu">
+      <?php print views_embed_view('menu_category', 'block', 5); ?>
+    </div>
+    <div id="salud" class="submenu">
+      <?php print views_embed_view('menu_category', 'block', 203); ?>
+    </div>
+    <div id="democracia_participa" class="submenu">
+      <?php print views_embed_view('menu_category', 'block', 11); ?>
     </div>
 
     <?php if (!empty($page['sidebar_second'])): ?>
@@ -202,7 +219,7 @@ if(isset($user->picture)){
    </div>
    <div class="feed_container col-md-12">
      <?php // TODO: filtrar usuarios moderadores  ?>
-     <?php print render(module_invoke('menu', 'block_view', 'menu-moderaci-n'));?>
+     <?php $block = module_invoke('menu', 'block_view', 'menu-moderaci-n'); print render($block);?>
       <div class="resume_feed">
         <?php
         $uri = explode('/', $_GET['q']);
