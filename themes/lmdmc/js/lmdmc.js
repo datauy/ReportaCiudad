@@ -9,7 +9,7 @@ function clickOnMenu(id){
   if(menu.className=="submenu show"){
     menu.className="submenu";
   }else{
-    $('.cat-menu').removeClass('show');
+    $('.submenu').removeClass('show');
     $('#'+id).addClass('show');
   }
 }
