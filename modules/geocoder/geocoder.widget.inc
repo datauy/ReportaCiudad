@@ -265,11 +265,9 @@ function geocoder_field_attach_load($entity_type, $entities, $age, $options) {
   foreach ($entities as &$entity) {
     list(, , $bundle) = entity_extract_ids($entity_type, $entity);
     // Examine every geocoder field instance attached to this entity's bundle.
-    $instances = array_intersect_key(field_info_instances($entity_type, $bundle), field_read_fields(array('type' => 'geofield')));
-    foreach ($instances as $field_name => $instance) {
+    foreach (field_info_instances($entity_type, $bundle) as $field_name => $instance) {
       if ($instance['widget']['type'] === 'geocoder'
         && !empty($instance['widget']['settings']['latlng_override'])
-        && !empty($entity->{$field_name})
         && ($geocoded_value = geocoder_widget_get_field_value($entity_type, $instance, $entity))) {
         foreach ($entity->{$field_name} as $langcode => $items) {
           foreach ($items as $delta => $item) {
@@ -293,28 +291,33 @@ function geocoder_field_attach_load($entity_type, $entities, $age, $options) {
  */
 function geocoder_field_attach_presave($entity_type, $entity) {
   list(, , $bundle) = entity_extract_ids($entity_type, $entity);
-  $instances = array_intersect_key(field_info_instances($entity_type, $bundle), field_read_fields(array('type' => 'geofield')));
   // Loop over any geofield using our geocode widget
-  foreach ($instances as $field_name => $instance) {
-    if ($instance['widget']['type'] === 'geocoder'
-      && !empty($entity->{$field_name})
-      && ($geocoded_value = geocoder_widget_get_field_value($entity_type, $instance, $entity))) {
-      foreach ($entity->{$field_name} as $langcode => $items) {
-        if (empty($items)) {
-          $entity->{$field_name} = $geocoded_value;
-          break;
-        }
-        foreach ($items as $delta => $item) {
-          // Check the entity value.
-          if (!(isset($entity->geocoder_overridden)
-            && isset($entity->geocoder_overridden[$field_name])
-            && isset($entity->geocoder_overridden[$field_name][$langcode])
-            && !empty($entity->geocoder_overridden[$field_name][$langcode][$delta]))) {
-            $entity->{$field_name}[$langcode][$delta] = $geocoded_value[$langcode][$delta];
+  foreach (field_info_instances($entity_type, $bundle) as $field_name => $instance) {
+    if ($instance['widget']['type'] === 'geocoder') {
+      if ($geocoded_value = geocoder_widget_get_field_value($entity_type, $instance, $entity)) {
+        if (!empty($entity->{$field_name})) {
+          foreach ($entity->{$field_name} as $langcode => $items) {
+            if (empty($items)) {
+            $entity->{$field_name} = $geocoded_value;
+            break;
+            }
+            foreach ($items as $delta => $item) {
+            // Check the entity value.
+            if (!(isset($entity->geocoder_overridden)
+              && isset($entity->geocoder_overridden[$field_name])
+              && isset($entity->geocoder_overridden[$field_name][$langcode])
+              && !empty($entity->geocoder_overridden[$field_name][$langcode][$delta]))) {
+              $entity->{$field_name}[$langcode][$delta] = $geocoded_value[$langcode][$delta];
+            }
+            }
           }
+        } else {
+          $entity->{$field_name} = $geocoded_value;
         }
+      } else {
+        $entity->{$field_name} = $geocoded_value;
       }
-    }
+  	}
   }
 }
 
@@ -355,7 +358,8 @@ function geocoder_widget_get_entity_field_value($entity_type, $field_instance, $
   else if ($entity) {
     $wrapper = entity_metadata_wrapper($entity_type, $entity);
     $field_wrapper = $wrapper->value()->$field_name;
-    $value = $field_wrapper[LANGUAGE_NONE];
+    $langcode = field_language($entity_type, $entity, $field_name);
+    $value = $field_wrapper[$langcode];
     $values = array_filter(is_array($value) && isset($value[0]) ? $value : array($value));
     $source_field_values = array_map(function($value) {
       if (is_array($value)) {
