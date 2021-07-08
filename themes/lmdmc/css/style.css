@@ -785,7 +785,7 @@ figure img.img-responsive {
 .add-ecopop_deseco a,
 .add-ecopop_deseco h2,
 .ecopop_deseco:before {
-	color: #009933;
+	color: #CCCC00;
 }
 .add-ambiente a,
 .add-ambiente h2,
@@ -805,7 +805,7 @@ figure img.img-responsive {
 #desarrollo_urbano.submenu .view-content { background-color: #FF9900;}
 #desarrollo_humano_social.submenu .view-content { background-color: #663399;}
 #educación_cultura.submenu .view-content { background-color: #FF0066;}
-#ecopop_deseco.submenu .view-content { background-color: #009933;}
+#ecopop_deseco.submenu .view-content { background-color: #CCCC00;}
 #ambiente.submenu .view-content { background-color: #009933;}
 #salud.submenu .view-content { background-color: #00CCCC;}
 #democracia_participa.submenu .view-content { background-color: #3366CC;}
@@ -1361,7 +1361,6 @@ h2.comment-form {
 		}
 		.ip-geoloc-map {
 			overflow: hidden;
-			height: 330px;
 		}
 		#categories-municipio .view-grouping-header {
 			width: 100%;

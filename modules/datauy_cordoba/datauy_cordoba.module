@@ -1428,7 +1428,7 @@ function datauy_cordoba_belongs2CPC($lat, $long) {
     'lat' => $lat,
     'lon' => $long
   );
-  $polygon_nodes = node_load_multiple(array(2300,2301,23002,2303,2304,2305,2306,2307,2308,2309));
+  $polygon_nodes = node_load_multiple(array(2300,2301,23002,2303,2304,2305,2306,2307,2308,2309,2589,2590,2591));
   foreach ($polygon_nodes as $polygon_node) {
     $polygon = geofield_proximity_polygon_extract($polygon_node->field_location['und']['0']);
     $distance = geofield_proximity_polygon_distance_to_polygon($reference_point, $polygon, NULL);
